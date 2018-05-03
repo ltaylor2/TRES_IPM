@@ -1,0 +1,390 @@
+model {
+  # -------------------------------
+  # parameter priors
+  # -------------------------------
+  
+  # Second Year (SY) Females -- Local Recruits
+  nsyf ~ dnorm(30, 0.01)T(0,)
+  N.SY.F[1] <- round(nsyf)
+
+  # Second Year (SY) Males -- Local Recruits
+  nsym ~ dnorm(30, 0.01)T(0,)
+  N.SY.M[1] <- round(nsym)
+
+  # After Second Year (ASY) Females -- Returning Breeders
+  nasyf ~ dnorm(30, 0.01)T(0,)
+  N.ASY.F[1] <- round(nasyf)      
+  
+  # After Second Year (ASY) Males -- Returning Breeders
+  nasym ~ dnorm(30, 0.01)T(0,)
+  N.ASY.M[1] <- round(nasym)      
+
+  # Immigrants Females
+  nimmf ~ dnorm(30, 0.01)T(0,)
+  N.imm.F[1] <- round(nimmf)   
+    
+  # Immigrants Males
+  nimmm ~ dnorm(30, 0.01)T(0,)
+  N.imm.M[1] <- round(nimmm)   
+
+  for (t in 1:(nyears-1)) {
+
+    # juvenile apparent survival (FEMALE)
+    logit(phi.J.F[t]) <- l.m.phi.J.F + epsilon.phi.J.F[t]
+    
+    # juvenile apparent survival (MALE)
+    logit(phi.J.M[t]) <- l.m.phi.J.M + epsilon.phi.J.M[t]   
+    
+    # adult apparent survival (FEMALE)
+    logit(phi.A.F[t]) <- l.m.phi.A.F + epsilon.phi.A.F[t]          
+
+    # adult apparent survival (MALE)
+    logit(phi.A.M[t]) <- l.m.phi.A.M + epsilon.phi.A.M[t]       
+    
+    # SY recap (FEMALE)
+    logit(recap.SY.F[t]) <- l.m.recap.SY.F + err.recap.SY.F[t]  
+    
+    # SY recap (MALE)
+    logit(recap.SY.M[t]) <- l.m.recap.SY.M + err.recap.SY.M[t]
+
+    # ASY recap (FEMALE)
+    logit(recap.ASY.F[t]) <- l.m.recap.ASY.F + err.recap.ASY.F[t]
+
+    # ASY recap (MALE)
+    logit(recap.ASY.M[t]) <- l.m.recap.ASY.M + err.recap.ASY.M[t]
+    
+    # No. immigrants (FEMALE)
+    log(numImms.F[t]) <- l.m.numImms.F + epsilon.numImms.F[t]       
+
+    # No. immigrants (MALE)
+    log(numImms.M[t]) <- l.m.numImms.M + epsilon.numImms.M[t]     
+  }
+  
+  for (t in 1:nyears) {
+    log(cs[t]) <- l.m.cs + epsilon.cs[t]            # clutch size
+    logit(hs[t]) <- l.m.hs + epsilon.hs[t]          # hatching success
+    logit(fs[t]) <- l.m.fs + epsilon.fs[t]          # fledging success
+  }
+  
+  # mean demographic parameters
+  m.phi.J.F ~ dunif(0, 1)
+  m.phi.J.M ~ dunif(0, 1)
+  
+  m.phi.A.F ~ dunif(0, 1)
+  m.phi.A.M ~ dunif(0, 1)
+  
+  m.recap.SY.F ~ dunif(0, 1)
+  m.recap.SY.M ~ dunif(0, 1)
+
+  m.recap.ASY.F ~ dunif(0, 1)
+  m.recap.ASY.M ~ dunif(0, 1)
+
+  m.numImms.F ~ dunif(0, 100)
+  m.numImms.M ~ dunif(0, 100)
+	
+  m.cs ~ dunif(0, 10)
+  m.hs ~ dunif(0, 1)
+  m.fs ~ dunif(0, 1)
+
+  # back transform means
+  l.m.phi.J.F <-  log(m.phi.J.F / (1-m.phi.J.F))
+  l.m.phi.J.M <-  log(m.phi.J.M / (1-m.phi.J.M))
+
+  l.m.phi.A.F <-  log(m.phi.A.F / (1-m.phi.A.F))
+  l.m.phi.A.M <-  log(m.phi.A.M / (1-m.phi.A.M))
+  
+  l.m.recap.SY.F <- log(m.recap.SY.F / (1-m.recap.SY.F))
+  l.m.recap.SY.M <- log(m.recap.SY.M / (1-m.recap.SY.M))
+
+  l.m.recap.ASY.F <- log(m.recap.ASY.F / (1-m.recap.ASY.F))
+  l.m.recap.ASY.M <- log(m.recap.ASY.M / (1-m.recap.ASY.M))
+
+  l.m.numImms.F <- log(m.numImms.F)
+  l.m.numImms.M <- log(m.numImms.M)
+
+  l.m.cs <- log(m.cs)
+  l.m.hs <-  log(m.hs / (1-m.hs))
+  l.m.fs <-  log(m.fs / (1-m.fs))
+  
+  # priors for temporal variation precision
+  tau.phi.J.F <- pow(sig.phi.J.F, -2)
+  sig.phi.J.F ~ dunif(0, 10)
+  
+  tau.phi.J.M <- pow(sig.phi.J.M, -2)
+  sig.phi.J.M ~ dunif(0, 10)
+
+  tau.phi.A.F <- pow(sig.phi.A.F, -2)
+  sig.phi.A.F ~ dunif(5, 15)
+  
+  tau.phi.A.M <- pow(sig.phi.A.M, -2)
+  sig.phi.A.M ~ dunif(5, 15)
+
+  tau.recap.SY.F <- pow(sig.recap.SY.F, -2)
+  sig.recap.SY.F ~ dunif(0, 10)
+  
+  tau.recap.SY.M <- pow(sig.recap.SY.M, -2)
+  sig.recap.SY.M ~ dunif(0, 10)
+
+  tau.recap.ASY.F <- pow(sig.recap.ASY.F, -2)
+  sig.recap.ASY.F ~ dunif(0, 10)
+  
+  tau.recap.ASY.M <- pow(sig.recap.ASY.M, -2)
+  sig.recap.ASY.M ~ dunif(0, 10)
+
+  tau.numImms.F <- pow(sig.numImms.F, -2)
+  sig.numImms.F ~ dunif(0, 10)
+  
+  tau.numImms.M <- pow(sig.numImms.M, -2)
+  sig.numImms.M ~ dunif(0, 10)
+  
+  tau.cs <- pow(sig.cs, -2)
+  sig.cs ~ dunif(5, 15)
+  
+  tau.hs <- pow(sig.hs, -2)
+  sig.hs ~ dunif(0, 10)
+
+  tau.fs <- pow(sig.fs, -2)
+  sig.fs ~ dunif(0, 10)
+
+  # Distribution of error terms for variable demographic rates
+  for (t in 1:(nyears-1)) {
+    epsilon.phi.J.F[t] ~ dnorm(0, tau.phi.J.F)     
+    epsilon.phi.J.M[t] ~ dnorm(0, tau.phi.J.M)     
+
+    epsilon.phi.A.F[t] ~ dnorm(0, tau.phi.A.F)     
+    epsilon.phi.A.M[t] ~ dnorm(0, tau.phi.A.M)     
+
+    err.recap.SY.F[t] ~ dnorm(0, tau.recap.SY.F)
+    err.recap.SY.M[t] ~ dnorm(0, tau.recap.SY.M)
+
+    err.recap.ASY.F[t] ~ dnorm(0, tau.recap.ASY.F)
+    err.recap.ASY.M[t] ~ dnorm(0, tau.recap.ASY.M)
+    
+    epsilon.numImms.F[t] ~ dnorm(0, tau.numImms.F)      
+    epsilon.numImms.M[t] ~ dnorm(0, tau.numImms.M)     
+  }
+  
+  for (t in 1:nyears) {
+    epsilon.cs[t] ~ dnorm(0, tau.cs)      
+    epsilon.hs[t] ~ dnorm(0, tau.hs)      
+    epsilon.fs[t] ~ dnorm(0, tau.fs)      
+  }
+
+  # -------------------------------
+  # Derived parameters
+  # -------------------------------
+  for (t in 1:(nyears-1)) {
+    omega.F[t] <- N.imm.F[t+1] / b.F[t]  # Imm. rate (FEMALE)
+    omega.M[t] <- N.imm.M[t+1] / b.M[t]  # Imm. rate (MALES)
+
+    # Total population size
+    Ntot[t] <- b.F[t] + b.M[t]
+    
+    # Finite rate of population change
+    lambda[t] <- Ntot[t+1] / Ntot[t]
+
+    logla[t] <- log(lambda[t])        
+  }
+  
+  Ntot[nyears] <- b.F[nyears] + b.M[nyears]
+  
+  # geometric mean for population growth
+  m.lambda <- exp(1/(nyears-1) * sum(logla[1:(nyears-1)])) 
+
+  # -------------------------------
+  # Likelihoods
+  # -------------------------------
+  
+  # The system process, i.e. the true state space
+  for (t in 2:nyears) {
+    # expected mean number of TOTAL fledglings based on demographic parameters
+    meanFl[t-1] <- b.F[t-1] * cs[t-1] * hs[t-1] * fs[t-1] 
+    
+    fl[t-1] ~ dpois(meanFl[t-1])
+    
+    fl.F[t-1] ~ dbin(0.5, fl[t-1])              # no. fledglings (FEMALE)
+    fl.M[t-1] <- fl[t-1] - fl.F[t-1]            # no. fledglings (MALE)
+    
+    N.SY.F[t] ~ dbin(phi.J.F[t-1], fl.F[t-1])  
+    N.SY.M[t] ~ dbin(phi.J.M[t-1], fl.M[t-1])    
+
+    N.ASY.F[t] ~ dbin(phi.A.F[t-1], b.F[t-1])         
+    N.ASY.M[t] ~ dbin(phi.A.M[t-1], b.M[t-1])          
+
+    N.imm.F[t] ~ dpois(numImms.F[t-1])     
+    N.imm.M[t] ~ dpois(numImms.M[t-1])    
+  }
+  
+  # Observation process, i.e. connecting state to data
+  for (t in 1:nyears) {
+    b.F[t] <- N.SY.F[t] + N.ASY.F[t] + N.imm.F[t]  # no. breeding females
+    b.M[t] <- N.SY.M[t] + N.ASY.M[t] + N.imm.M[t]  # no. breeding females
+
+    y.F[t] ~ dpois(b.F[t])
+    y.M[t] ~ dpois(b.M[t])
+  }
+
+  # Poisson regressions for productivity data
+  for (t in 1:nyears) {
+    numEggs[t] ~ dpois(rho.e[t])
+    rho.e[t] <- numNests[t] * cs[t]
+    
+    numHatchlings[t] ~ dpois(rho.h[t])
+    rho.h[t] <- numEggs[t] * hs[t]
+    
+    numFledglings[t] ~ dpois(rho.f[t])
+    rho.f[t] <- numHatchlings[t] * fs[t]
+
+    # replicates for GoF
+    numEggs.rep[t] ~ dpois(rho.e[t]) 
+    numHatchlings.rep[t] ~ dpois(rho.h[t])
+    numFledglings.rep[t] ~ dpois(rho.f[t])
+
+    # exected values for all three parameter sets
+    numEggs.exp[t] <- numNests[t] * cs[t]
+    numHatchlings.exp[t] <- numEggs[t] * hs[t]
+    numFledglings.exp[t] <- numHatchlings[t] * fs[t]
+
+    # chi-square statistics for each year
+    numEggs.chi[t] <- (numEggs[t] - numEggs.exp[t])^2 / (numEggs.exp[t] + 0.5)
+
+    numEggs.chi.new[t] <- (numEggs.rep[t] - numEggs.exp[t])^2 / (numEggs.exp[t] + 0.5)
+    
+    numHatchlings.chi[t] <- (numHatchlings[t] - numHatchlings.exp[t])^2 / (numHatchlings.exp[t] + 0.5)
+
+    numHatchlings.chi.new[t] <- (numHatchlings.rep[t] - numHatchlings.exp[t])^2 / (numHatchlings.exp[t] + 0.5)
+
+    numFledglings.chi[t] <- (numFledglings[t] - numFledglings.exp[t])^2 / (numFledglings.exp[t] + 0.5)
+
+    numFledglings.chi.new[t] <- (numFledglings.rep[t] - numFledglings.exp[t])^2 / (numFledglings.exp[t] + 0.5)
+  }
+
+  fit.numEggs <- sum(numEggs.chi[])
+  fit.numEggs.new <- sum(numEggs.chi.new[])
+  
+  fit.numHatchlings <- sum(numHatchlings.chi[])
+  fit.numHatchlings.new <- sum(numHatchlings.chi.new[])
+
+  fit.numFledglings <- sum(numFledglings.chi[])
+  fit.numFledglings.new <- sum(numFledglings.chi.new[])
+
+  # likelihood for CJS capture-recapture with 2 age classes, 2 sexes
+  for (t in 1:(nyears-1)){
+    marray.F[t,1:nyears] ~ dmulti(pr.F[t,], r.F[t])
+    marray.F[t+nyears-1,1:nyears] ~ dmulti(pr.F[t+nyears-1,], r.F[t+nyears-1])
+    
+    marray.M[t,1:nyears] ~ dmulti(pr.M[t,], r.M[t])
+    marray.M[t+nyears-1,1:nyears] ~ dmulti(pr.M[t+nyears-1,], r.M[t+nyears-1])
+  }
+    
+  # m-array cell probabilities
+  # juveniles are in rows [1:nyears-1]
+  # adults are in rows [nyears:(nyears+nyears-1]
+  for (t in 1:(nyears-1)){
+    q.J.F[t] <- 1-recap.SY.F[t]		  # probability of non-capture (SY F)
+    q.J.M[t] <- 1-recap.SY.M[t]		  # probability of non-capture (SY M)
+
+    q.A.F[t] <- 1-recap.ASY.F[t]		# probability of non-capture (ASY F)
+    q.A.M[t] <- 1-recap.ASY.M[t]		# probability of non-capture (ASY M)
+
+    # main diagonal
+    pr.F[t,t] <- phi.J.F[t] * recap.SY.F[t]
+    pr.F[t+nyears-1,t] <- phi.A.F[t] * recap.ASY.F[t]
+
+    pr.M[t,t] <- phi.J.M[t] * recap.SY.M[t]
+    pr.M[t+nyears-1,t] <- phi.A.M[t] * recap.ASY.M[t]
+
+    # above main diagonal
+    for (j in (t+1):(nyears-1)){
+
+      pr.F[t,j] <- phi.J.F[t] * prod(phi.A.F[(t+1):j]) * q.J.F[t] * prod(q.A.F[t:(j-1)]) * recap.ASY.F[j] / (q.A.F[t] + 0.000001)          # avoid parent node errors
+
+      pr.F[t+nyears-1,j] <- prod(phi.A.F[t:j]) * prod(q.A.F[t:(j-1)]) * recap.ASY.F[j]
+      
+      pr.M[t,j] <- phi.J.M[t] * prod(phi.A.M[(t+1):j]) * q.J.M[t] * prod(q.A.M[t:(j-1)]) * recap.ASY.M[j] / (q.A.M[t] + 0.000001)          # avoid parent node errors
+
+      pr.M[t+nyears-1,j] <- prod(phi.A.M[t:j]) * prod(q.A.M[t:(j-1)]) * recap.ASY.M[j]
+    }
+    
+    # below main diagonal
+    for (j in 1:(t-1)){
+      pr.F[t,j] <- 0
+      pr.F[t+nyears-1,j] <- 0
+      
+      pr.M[t,j] <- 0
+      pr.M[t+nyears-1,j] <- 0
+    }
+    
+    # last column
+    pr.F[t,nyears] <- 1 - sum(pr.F[t,1:(nyears-1)])
+    pr.F[t+nyears-1,nyears] <- 1 - sum(pr.F[t+nyears-1,1:(nyears-1)])
+    
+    pr.M[t,nyears] <- 1 - sum(pr.M[t,1:(nyears-1)])
+    pr.M[t+nyears-1,nyears] <- 1 - sum(pr.M[t+nyears-1,1:(nyears-1)])
+  }
+
+  # Compute Freeman-Tukey statistics 
+  # for posterior predictive checks of the CR data
+  for (t1 in 1:(nyears-1)) {
+    for (t2 in 1:nyears) {
+      marray.F.exp[t1,t2] <- pr.F[t1,t2] * r.F[t1]
+      E.J.F.org[t1,t2] <- pow((pow(marray.F[t1,t2], 0.5) - pow(marray.F.exp[t1,t2], 0.5)), 2)
+                  
+      marray.M.exp[t1,t2] <- pr.M[t1,t2] * r.M[t1]
+      E.J.M.org[t1,t2] <- pow((pow(marray.M[t1,t2], 0.5) - pow(marray.M.exp[t1,t2], 0.5)), 2)
+      
+      marray.F.exp[t1+nyears-1,t2] <- pr.F[t1+nyears-1,t2] * r.F[t1+nyears-1]
+
+      E.A.F.org[t1,t2] <- pow((pow(marray.F[t1+nyears-1,t2], 0.5) - pow(marray.F.exp[t1+nyears-1,t2], 0.5)), 2)
+
+      marray.M.exp[t1+nyears-1,t2] <- pr.M[t1+nyears-1,t2] * r.M[t1+nyears-1]
+
+      E.A.M.org[t1,t2] <- pow((pow(marray.M[t1+nyears-1,t2], 0.5) - pow(marray.M.exp[t1+nyears-1,t2], 0.5)), 2)
+    }
+  }
+  
+  # Generate replicate data for the CR posteriors 
+  for (t1 in 1:(nyears-1)) {
+    marray.F.new[t1,1:nyears] ~ dmulti(pr.F[t1,1:nyears], r.F[t1])
+
+    marray.M.new[t1,1:nyears] ~ dmulti(pr.M[t1,1:nyears], r.M[t1])                
+
+    marray.F.new[t1+nyears-1,1:nyears] ~ dmulti(pr.F[t1+nyears-1,1:nyears], r.F[t1+nyears-1])  
+
+    marray.M.new[t1+nyears-1,1:nyears] ~ dmulti(pr.M[t1+nyears-1,1:nyears], r.M[t1+nyears-1])  
+  }
+  
+  # Compute fit statistics for CR posterior predictive checks
+  for (t1 in 1:(nyears-1)) {
+    for (t2 in 1:nyears){
+      E.J.F.new[t1,t2] <- pow((pow(marray.F.new[t1,t2], 0.5) - pow(marray.F.exp[t1,t2], 0.5)), 2)
+
+      E.J.M.new[t1,t2] <- pow((pow(marray.M.new[t1,t2], 0.5) - pow(marray.M.exp[t1,t2], 0.5)), 2)
+
+      E.A.F.new[t1,t2] <- pow((pow(marray.F.new[t1+nyears-1,t2], 0.5) - pow(marray.F.exp[t1+nyears-1,t2], 0.5)), 2)
+
+      E.A.M.new[t1,t2] <- pow((pow(marray.M.new[t1+nyears-1,t2], 0.5) - pow(marray.M.exp[t1+nyears-1,t2], 0.5)), 2)
+    }
+  }
+  
+  # Yearly fit statistics for CR posterior predictive checks
+  for (t in 1:nyears) {
+    y.fit.A.F[t] <- sum(E.A.F.org[,t])
+    y.fit.A.F.new[t] <- sum(E.A.F.new[,t])
+
+    y.fit.A.M[t] <- sum(E.A.M.org[,t])
+    y.fit.A.M.new[t] <- sum(E.A.M.new[,t])
+  }
+
+  fit.J.F <- sum(E.J.F.org[,])
+  fit.J.F.new <- sum(E.J.F.new[,])
+  
+  fit.J.M <- sum(E.J.M.org[,])
+  fit.J.M.new <- sum(E.J.M.new[,])
+  
+  fit.A.F <- sum(E.A.F.org[,])
+  fit.A.F.new <- sum(E.A.F.new[,])
+  
+  fit.A.M <- sum(E.A.M.org[,])
+  fit.A.M.new <- sum(E.A.M.new[,])
+}
