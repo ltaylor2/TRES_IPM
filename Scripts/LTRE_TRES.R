@@ -209,7 +209,7 @@ cont_summary <- data.frame(cs=cont.cs,
                            prop.M=cont.prop.M) %>%
                           gather() %>%
                           group_by(key) %>%
-                          summarise(mean=mean(value)), 
+                          summarise(mean=mean(value), 
                                     low=quantile(value, 0.025),
                                     high=quantile(value, 0.975))
 

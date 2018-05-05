@@ -57,7 +57,7 @@ model {
     log(numImms.F[t]) <- l.m.numImms.F + epsilon.numImms.F[t]       
 
     # No. immigrants (MALE)
-    log(numImms.M[t]) <- l.m.numImms.M + epsilon.numImms.M[t]     
+    log(numImms.M[t]) <- l.m.numImms.M + epsilon.numImms.M[t]   
   }
   
   for (t in 1:nyears) {

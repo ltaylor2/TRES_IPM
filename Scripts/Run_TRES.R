@@ -38,10 +38,10 @@ jags.inits <- function() {
        m.recap.SY.M=runif(1,0,1),
        m.recap.ASY.F=runif(1,0,1),
        m.recap.ASY.M=runif(1,0,1),
-       m.numImms.F=runif(1,0,30), 
-       m.numImms.M=runif(1,0,30),
-       N.imm.F=c(NA,round(runif(nyears-1,0,30))), 
-       N.imm.M=c(NA,round(runif(nyears-1,0,30))))
+       m.numImms.F=runif(1,0,100), 
+       m.numImms.M=runif(1,0,100),
+       N.imm.F=c(NA,round(runif(nyears-1,0,100))), 
+       N.imm.M=c(NA,round(runif(nyears-1,0,100))))
 }
 
 # output parameters

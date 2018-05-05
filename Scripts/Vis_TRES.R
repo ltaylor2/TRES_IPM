@@ -188,6 +188,7 @@ fig3 <- ggplot() +
                         width=0.3) +
           xlab("Year") +
           ylab("Population size") +
+          ggtitle("Figure 3") + 
           scale_x_continuous(limits=c(1986.8, 2010.2),
                              breaks=seq(1987, 2010, by=1),
                              labels=c(1987, "", 1989, "", 1991,
@@ -208,16 +209,18 @@ fig3 <- ggplot() +
                 plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
 ggsave("Output/Figure_3.png", plot=fig3, 
-       width=3.5, dpi=600, height=3, unit="in")
+       width=3.5, dpi=600, height=3.5, unit="in")
 ggsave("Output/PDFs/Figure_3.pdf", plot=fig3, device=cairo_pdf, 
-        width=3.5, dpi=600, height=3, unit="in")
+        width=3.5, dpi=600, height=3.5, unit="in")
 
 
 # Figure 4 ----------------------------------------------------------------
 yearPlots <- list()
 
+yearPlots[[1]] <- ggdraw() + draw_label("Figure 4", fontface='bold')
+
 # Clutch size
-yearPlots[[1]] <- ggplot() +
+yearPlots[[2]] <- ggplot() +
                     geom_point(data=subset(out, param=="cs"), 
                                aes(x=year, y=mean), 
                                size=1.5) +
@@ -257,7 +260,7 @@ yearPlots[[1]] <- ggplot() +
                           plot.margin = unit(c(0.05, 0, 0.01, 0.05), "in"))
 
 # Hatching success
-yearPlots[[2]] <- ggplot() +
+yearPlots[[3]] <- ggplot() +
                     geom_point(data=subset(out, param=="hs"), 
                                aes(x=year, y=mean), size=1.5) +
                     geom_line(data=subset(out, param=="hs"), 
@@ -295,7 +298,7 @@ yearPlots[[2]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Fledging success
-yearPlots[[3]] <- ggplot() +
+yearPlots[[4]] <- ggplot() +
                     geom_point(data=subset(out, param=="fs"), 
                                aes(x=year, y=mean), size=1.5) +
                     geom_line(data=subset(out, param=="fs"), 
@@ -334,7 +337,7 @@ yearPlots[[3]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Juvenile survival (both sexes)
-yearPlots[[4]] <- ggplot() +
+yearPlots[[5]] <- ggplot() +
                     geom_point(data=subset(out, param=="phi.J.M"), 
                                aes(x=year+0.3, y=mean),
                                size=1.5, colour="dark gray") +
@@ -389,7 +392,7 @@ yearPlots[[4]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Adult survival (both sexes)
-yearPlots[[5]] <- ggplot() +
+yearPlots[[6]] <- ggplot() +
                     geom_point(data=subset(out, param=="phi.A.M"), 
                                aes(x=year+0.3, y=mean), 
                                size=1.5, colour="dark gray") +
@@ -443,7 +446,12 @@ yearPlots[[5]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Immigration (both sexes)
-yearPlots[[6]] <- ggplot() +
+
+# derive arithmetic means
+mOmega.F <- mean(rowMeans(ipm_sim[["omega.F"]]))
+mOmega.M <- mean(rowMeans(ipm_sim[["omega.M"]]))
+
+yearPlots[[7]] <- ggplot() +
                     geom_point(data=subset(out, param=="omega.M"), 
                                aes(x=year+0.3, y=mean), 
                                size=1.5, 
@@ -451,8 +459,7 @@ yearPlots[[6]] <- ggplot() +
                     geom_line(data=subset(out, param=="omega.M"), 
                               aes(x=year+0.3, y=mean), 
                               colour="dark gray") +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.omega.M")$mean),
+                    geom_hline(aes(yintercept=mOmega.M),
                                linetype="dashed", 
                                colour="dark gray") +
                     geom_errorbar(data=subset(out, param=="omega.M"), 
@@ -464,8 +471,7 @@ yearPlots[[6]] <- ggplot() +
                                size=1.5) +
                     geom_line(data=subset(out, param=="omega.F"), 
                               aes(x=year, y=mean)) +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.omega.F")$mean),
+                    geom_hline(aes(yintercept=mOmega.F),
                                linetype="dashed") +
                     geom_errorbar(data=subset(out, param=="omega.F"), 
                                   aes(x=year, ymin=low, ymax=high, 
@@ -498,7 +504,7 @@ yearPlots[[6]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Lambda
-yearPlots[[7]] <- ggplot() +
+yearPlots[[8]] <- ggplot() +
                     geom_line(data=subset(out, param=="lambda"), 
                               aes(x=year, y=mean)) +
                     geom_hline(aes(yintercept=subset(out, 
@@ -538,16 +544,17 @@ yearPlots[[7]] <- ggplot() +
                           panel.border=element_blank(),
                           plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
-fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=7, ncol=1)
-
+fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=8, ncol=1)
 ggsave("Output/Figure_4.png", fig4, 
-       width=7, height=8, dpi=600)
+       width=7, height=9, dpi=600)
 ggsave("Output/PDFs/Figure_4.pdf", fig4, device=cairo_pdf, 
-       width=7, height=8, dpi=600)
+       width=7, height=9, dpi=600)
 
 # Figure 5 ------------------------------------------------------------------
 
 contPlots <- list()
+
+contPlots[[1]] <- ggdraw() + draw_label("Figure 5", fontface='bold')
 
 # Productivity and Juvenile Survival summed
 prodandjuv_sumCont <- yearly_cont_summary %>%
@@ -556,7 +563,7 @@ prodandjuv_sumCont <- yearly_cont_summary %>%
                         group_by(year) %>%
                         summarise(sumCont=sum(mean))
 
-contPlots[[1]] <- ggplot(prodandjuv_sumCont) +
+contPlots[[2]] <- ggplot(prodandjuv_sumCont) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
                                alpha=0.5) +
@@ -602,7 +609,7 @@ contPlots[[1]] <- ggplot(prodandjuv_sumCont) +
                           plot.margin = unit(c(0.05, 0, 0.01, 0.05), "in"))
 
 # Adult survival (both sexes)
-contPlots[[2]] <- ggplot(subset(yearly_cont_summary, 
+contPlots[[3]] <- ggplot(subset(yearly_cont_summary, 
                                 key %in% c("phi.A.F", "phi.A.M"))) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
@@ -647,7 +654,7 @@ contPlots[[2]] <- ggplot(subset(yearly_cont_summary,
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Immigration (both sexes)
-contPlots[[3]] <- ggplot(subset(yearly_cont_summary, 
+contPlots[[4]] <- ggplot(subset(yearly_cont_summary, 
                          key %in% c("omega.F", "omega.M"))) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
@@ -691,12 +698,12 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                           panel.border=element_blank(),
                           plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
-fig5 <- plot_grid(plotlist=contPlots, align="hv", nrow=3, ncol=1)
+fig5 <- plot_grid(plotlist=contPlots, align="hv", nrow=4, ncol=1)
 
 ggsave("Output/Figure_5.png", fig5, 
-       width=7, height=5, dpi=600)
+       width=7, height=6, dpi=600)
 ggsave("Output/PDFs/Figure_5.pdf", fig5, device=cairo_pdf, 
-       width=7, height=5, dpi=600)
+       width=7, height=6, dpi=600)
 
 # Figure 6 (Appendix A)--------------------------------------------------------
 # For yearly G.O.F
@@ -719,6 +726,7 @@ fig6 <- ggplot() +
                                       2007, "", 2009, "")) +
           ylab(expression(italic(PPP)*paste("-value"))) +
           xlab("Year") +
+          ggtitle("Figure 6 in Appendix A") +
           theme(title=element_text(size=12), 
                 axis.title.y=element_text(size=10, 
                                           margin=margin(r=8), 
@@ -740,8 +748,13 @@ ggsave("Output/PDFs/Figure_6.pdf", plot=fig6, device=cairo_pdf,
 
 cont_appendixPlots <- list()
 
+cont_appendixPlots[[1]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
+
+cont_appendixPlots[[2]] <- ggplot()
+
+
 # Clutch size
-cont_appendixPlots[[1]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
+cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -779,7 +792,7 @@ cont_appendixPlots[[1]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                                   plot.margin = unit(c(.05, 0, 0, .05), "in"))
 
 # Hatching success
-cont_appendixPlots[[2]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
+cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -817,7 +830,7 @@ cont_appendixPlots[[2]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.00), "in"))
 
 # fledging success
-cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
+cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -855,7 +868,7 @@ cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (FEMALE)
-cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -896,7 +909,7 @@ cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (MALE)
-cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -939,7 +952,7 @@ cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Adult survival (FEMALE)
-cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
                                   key == "phi.A.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -982,7 +995,7 @@ cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Adult survival (MALE)
-cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
                                         key == "phi.A.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1025,7 +1038,7 @@ cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Immigration (FEMALE)
-cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1068,7 +1081,7 @@ cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Immigration (MALE)
-cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1111,7 +1124,7 @@ cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Proportional abundance (FEMALE)
-cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", alpha=0.5) +
@@ -1153,7 +1166,7 @@ cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0.0, 0.00), "in"))
 
 # Proportional abundance (MALE)
-cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1194,9 +1207,9 @@ cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary,
                                   panel.border=element_blank(),
                                   plot.margin = unit(c(0, 0, .05, .05), "in"))
 
-fig7 <- plot_grid(plotlist=cont_appendixPlots, align="hv", nrow=6, ncol=2)
+fig7 <- plot_grid(plotlist=cont_appendixPlots, align="hv", nrow=7, ncol=2)
 
 ggsave("Output/Figure_7.png", fig7, 
-       width=7, height=9)
+       width=7, height=10)
 ggsave("Output/PDFs/Figure_7.pdf", fig7, device=cairo_pdf, 
-       width=7, height=9)
+       width=7, height=10)
