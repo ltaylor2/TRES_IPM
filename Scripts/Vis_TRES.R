@@ -209,9 +209,9 @@ fig3 <- ggplot() +
                 plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
 ggsave("Output/Figure_3.png", plot=fig3, 
-       width=3.5, dpi=600, height=3.5, unit="in")
+       width=3.5, height=3.5, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_3.pdf", plot=fig3, device=cairo_pdf, 
-        width=3.5, dpi=600, height=3.5, unit="in")
+        width=3.5, height=3.5, dpi=600, units="in")
 
 
 # Figure 4 ----------------------------------------------------------------
@@ -546,9 +546,9 @@ yearPlots[[8]] <- ggplot() +
 
 fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=8, ncol=1)
 ggsave("Output/Figure_4.png", fig4, 
-       width=7, height=9, dpi=600)
+       width=7, height=9, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_4.pdf", fig4, device=cairo_pdf, 
-       width=7, height=9, dpi=600)
+       width=7, height=9, dpi=600, units="in")
 
 # Figure 5 ------------------------------------------------------------------
 
@@ -701,13 +701,12 @@ contPlots[[4]] <- ggplot(subset(yearly_cont_summary,
 fig5 <- plot_grid(plotlist=contPlots, align="hv", nrow=4, ncol=1)
 
 ggsave("Output/Figure_5.png", fig5, 
-       width=7, height=6, dpi=600)
+       width=7, height=6, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_5.pdf", fig5, device=cairo_pdf, 
-       width=7, height=6, dpi=600)
+       width=7, height=6, dpi=600, units="in")
 
 # Figure 6 (Appendix A)--------------------------------------------------------
 # For yearly G.O.F
-# commented out here-- extra nodes take signfiicantly longer to run JAGS model
 fig6 <- ggplot() +
           geom_hline(aes(yintercept=0.5), 
                      colour="lightgray", 
@@ -728,33 +727,34 @@ fig6 <- ggplot() +
           xlab("Year") +
           ggtitle("Figure 6 in Appendix A") +
           theme(title=element_text(size=12), 
-                axis.title.y=element_text(size=10, 
-                                          margin=margin(r=8), 
+                axis.title.y=element_text(size=10,
+                                          margin=margin(r=4), 
                                           vjust=0.5),
                 axis.title.x=element_text(size=10, 
-                                          margin=margin(t=8), 
+                                          margin=margin(t=4), 
                                           hjust=0.5),
-                axis.text=element_text(size=9),
+                axis.text=element_text(size=6.5),
                 panel.grid=element_blank(), 
                 panel.border=element_blank(),
-                plot.margin = unit(c(0.05, 0.05, 0.05, 0.05), "in"))
+                plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
 ggsave("Output/Figure_6.png", plot=fig6, 
-       width=7, height=4)
+       width=3.5, height=3.5, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_6.pdf", plot=fig6, device=cairo_pdf, 
-        width=7, height=4)
+        width=3.5, height=3.5, dpi=600, units="in")
 
 # Figure 7 (Appendix B)--------------------------------------------------------
 
 cont_appendixPlots <- list()
 
-cont_appendixPlots[[1]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
+cont_appendixPlots[[1]] <- ggplot()
 
-cont_appendixPlots[[2]] <- ggplot()
+cont_appendixPlots[[2]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
 
+cont_appendixPlots[[3]] <- ggplot()
 
 # Clutch size
-cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
+cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -792,7 +792,7 @@ cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                                   plot.margin = unit(c(.05, 0, 0, .05), "in"))
 
 # Hatching success
-cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
+cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -830,7 +830,7 @@ cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.00), "in"))
 
 # fledging success
-cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
+cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -868,7 +868,7 @@ cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (FEMALE)
-cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -909,7 +909,7 @@ cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (MALE)
-cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -952,7 +952,7 @@ cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Adult survival (FEMALE)
-cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
                                   key == "phi.A.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -995,7 +995,7 @@ cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Adult survival (MALE)
-cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
                                         key == "phi.A.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1038,7 +1038,7 @@ cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Immigration (FEMALE)
-cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1081,7 +1081,7 @@ cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Immigration (MALE)
-cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1124,7 +1124,7 @@ cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Proportional abundance (FEMALE)
-cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", alpha=0.5) +
@@ -1143,30 +1143,30 @@ cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary,
                                      hjust=0, size=2) +
                             scale_x_continuous(limits=c(1986.5, 2010.5),
                                                breaks=seq(1987, 2010, by=1),
-                                               labels=c(1987, "", 1989, "", 
-                                                        1991, "", 1993, "",
-                                                        1995, "", 1997, "",
-                                                        1999, "", 2001, "",
-                                                        2003, "", 2005, "", 
-                                                        2007, "", 2009, "")) +
+                                               labels=c("87", "", "89", "",
+                                                        "91", "", "93", "",
+                                                        "95", "", "97", "",
+                                                        "99", "", "01", "",
+                                                        "03", "", "05", "",
+                                                        "07", "", "09", "")) +
                             guides(fill=FALSE) +
                             xlab("Year") +
-                            ylab("") +
+                            ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
                             theme(title=element_text(size=12), 
-                                  axis.title.y=element_text(size=10, 
-                                                            margin=margin(r=8),
-                                                            vjust=0.5),
-                                  axis.title.x=element_blank(), 
-                                  axis.text.x=element_blank(), 
-                                  axis.line.x=element_blank(), 
-                                  axis.ticks.x=element_blank(),
-                                  axis.text=element_text(size=9),
-                                  panel.grid=element_blank(), 
-                                  panel.border=element_blank(),
-                                  plot.margin = unit(c(0, 0, 0.0, 0.00), "in"))
+                                axis.title.y=element_text(size=10, 
+                                                          margin=margin(r=8),
+                                                          vjust=0.5),
+                                axis.title.x=element_text(size=10, 
+                                                          margin=margin(t=8),
+                                                          hjust=0.5),
+                                axis.text=element_text(size=9),
+                                panel.grid=element_blank(), 
+                                panel.border=element_blank(),
+                                plot.margin = unit(c(0, 0, .05, .05), "in"))
+
 
 # Proportional abundance (MALE)
-cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[14]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1194,22 +1194,22 @@ cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary,
                                                         "07", "", "09", "")) +
                             guides(fill=FALSE) +
                             xlab("Year") +
-                            ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
+                            ylab("") + 
                             theme(title=element_text(size=12), 
                                   axis.title.y=element_text(size=10, 
                                                             margin=margin(r=8),
                                                             vjust=0.5),
                                   axis.title.x=element_text(size=10, 
-                                                            margin=margin(t=8),
-                                                            hjust=0.5),
+                                                          margin=margin(t=8),
+                                                          hjust=0.5),
                                   axis.text=element_text(size=9),
                                   panel.grid=element_blank(), 
                                   panel.border=element_blank(),
-                                  plot.margin = unit(c(0, 0, .05, .05), "in"))
+                                  plot.margin = unit(c(0, 0, 0.0, 0.00), "in"))
 
 fig7 <- plot_grid(plotlist=cont_appendixPlots, align="hv", nrow=7, ncol=2)
 
 ggsave("Output/Figure_7.png", fig7, 
-       width=7, height=10)
+       width=7, height=10, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_7.pdf", fig7, device=cairo_pdf, 
-       width=7, height=10)
+       width=7, height=10, dpi=600, units="in")
