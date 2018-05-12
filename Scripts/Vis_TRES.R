@@ -711,10 +711,10 @@ fig6 <- ggplot() +
           geom_hline(aes(yintercept=0.5), 
                      colour="lightgray", 
                      linetype="dashed") +
-          geom_line(data=y.gof.A.F, aes(x=year+1986, y=bP)) +
           geom_line(data=y.gof.A.M, 
                     aes(x=year+1986, y=bP), 
                     colour="darkgray") +
+          geom_line(data=y.gof.A.F, aes(x=year+1986, y=bP)) +
           scale_y_continuous(limits=c(0, 1)) +
           scale_x_continuous(limits=c(1986.5, 2010.5),
                              breaks=seq(1987, 2010, by=1),
@@ -747,9 +747,10 @@ ggsave("Output/PDFs/Figure_6.pdf", plot=fig6, device=cairo_pdf,
 
 cont_appendixPlots <- list()
 
-cont_appendixPlots[[1]] <- ggplot()
+cont_appendixPlots[[1]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
 
-cont_appendixPlots[[2]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
+cont_appendixPlots[[2]] <- ggplot()
+
 
 cont_appendixPlots[[3]] <- ggplot()
 
