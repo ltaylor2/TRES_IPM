@@ -216,6 +216,13 @@ ggsave("Output/PDFs/Figure_3.pdf", plot=fig3, device=cairo_pdf,
 
 
 # Figure 4 ----------------------------------------------------------------
+shiftMales <- function(param, year) {
+  y = year
+  if (grepl(".M", param)) {
+    y = year + 0.3
+  }
+  return(y)
+}
 yearPlots <- list()
 
 yearPlots[[1]] <- ggdraw() + draw_label("Figure 4", fontface='bold')
@@ -284,6 +291,9 @@ yearPlots[[3]] <- ggplot() +
                                                 1997, "", 1999, "", 2001, 
                                                 "", 2003, "", 2005, "", 
                                                 2007, "", 2009, "")) +
+                    scale_y_continuous(breaks=c(0.6, 0.7, 0.8, 0.9),
+                                       labels=c("0.60", "0.70", 
+                                                "0.80", "0.90")) +
                     xlab("") +
                     ylab("Hatching success") +
                     theme(title=element_text(size=12), 
@@ -338,33 +348,38 @@ yearPlots[[4]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Juvenile survival (both sexes)
+phijs <- out %>%
+          subset(param %in% c("phi.J.F", "phi.J.M")) %>%
+          select(param, year, mean, low, high) %>%
+          mutate(year = pmap_dbl(list(param, year), shiftMales))
+
+m.phijs <- out %>%
+            subset(param %in% c("m.phi.J.F", "m.phi.J.M")) %>%
+            select(param, mean)
+
 yearPlots[[5]] <- ggplot() +
-                    geom_point(data=subset(out, param=="phi.J.M"), 
-                               aes(x=year+0.3, y=mean),
-                               size=1.5, colour="dark gray") +
-                    geom_line(data=subset(out, param=="phi.J.M"), 
-                              aes(x=year+0.3, y=mean), 
-                              colour="dark gray") +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.phi.J.M")$mean),
-                               linetype="dashed", colour="dark gray") +
-                    geom_errorbar(data=subset(out, param=="phi.J.M"), 
-                                  aes(x=year+0.3, 
-                                      ymin=low, ymax=high, 
-                                      width=0.4), 
-                                  colour="dark gray") +
-                    geom_point(data=subset(out, param=="phi.J.F"), 
-                               aes(x=year, y=mean), 
-                               size=1.5) +
-                    geom_line(data=subset(out, param=="phi.J.F"), 
-                              aes(x=year, y=mean)) +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.phi.J.F")$mean),
+                    geom_hline(data=m.phijs,
+                               aes(yintercept=mean, color=param),
                                linetype="dashed") +
-                    geom_errorbar(data=subset(out, param=="phi.J.F"), 
-                                  aes(x=year, 
-                                      ymin=low, ymax=high, 
-                                      width=0.4)) +
+                    geom_point(data=phijs,
+                               aes(x=year, y=mean, color=param),
+                               size=1.5) +
+                    geom_line(data=phijs,
+                              aes(x=year, y=mean, color=param)) + 
+                    geom_errorbar(data=phijs,
+                                  aes(x=year, color=param,
+                                      ymin=low, ymax=high),
+                                  width=0.4) +
+                    scale_color_manual(labels=c("phi.J.F"="Female",
+                                                 "phi.J.M"="Male"),
+                                        values=c("phi.J.F"="black",
+                                                 "phi.J.M"="darkgray",
+                                                 "m.phi.J.F"="black",
+                                                 "m.phi.J.M"="darkgray"),
+                                        breaks=c("phi.J.F", "phi.J.M")) +
+                    scale_y_continuous(breaks=c(0.01, 0.03, 
+                                                0.05, 0.07, 0.09)) +
+                    guides(color=guide_legend(title="", ncol=2)) +
                     annotate(geom="text", 
                              label="paste(\"(\")*bold(D)*paste(\")\")", 
                              parse=TRUE, 
@@ -380,7 +395,9 @@ yearPlots[[5]] <- ggplot() +
                                                 2007, "", 2009, "")) +
                     xlab("") +
                     ylab("Juvenile survival") +
-                    theme(title=element_text(size=12), 
+                    theme(title=element_text(size=12),
+                          legend.position=c(0.68, 1.45),
+                          legend.text=element_text(size=10),
                           axis.title.y=element_text(size=10, 
                                                     margin=margin(r=8), 
                                                     vjust=0.5),
@@ -393,32 +410,33 @@ yearPlots[[5]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Adult survival (both sexes)
+phias <- out %>%
+          subset(param %in% c("phi.A.F", "phi.A.M")) %>%
+          select(param, year, mean, low, high) %>%
+          mutate(year=pmap_dbl(list(param, year), shiftMales))
+
+m.phias <- out %>%
+            subset(param %in% c("m.phi.A.F", "m.phi.A.M")) %>%
+            select(param, mean)
+
 yearPlots[[6]] <- ggplot() +
-                    geom_point(data=subset(out, param=="phi.A.M"), 
-                               aes(x=year+0.3, y=mean), 
-                               size=1.5, colour="dark gray") +
-                    geom_line(data=subset(out, param=="phi.A.M"), 
-                              aes(x=year+0.3, y=mean), 
-                              colour="dark gray") +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.phi.A.M")$mean),
-                               linetype="dashed", colour="dark gray") +
-                    geom_errorbar(data=subset(out, param=="phi.A.M"), 
-                                  aes(x=year+0.3, 
-                                      ymin=low, ymax=high, 
-                                      width=0.4),
-                                  colour="dark gray") +
-                    geom_point(data=subset(out, param=="phi.A.F"), 
-                               aes(x=year, y=mean), size=1.5) +
-                    geom_line(data=subset(out, param=="phi.A.F"), 
-                              aes(x=year, y=mean)) +
-                    geom_hline(aes(yintercept=subset(out, 
-                                                     param=="m.phi.A.F")$mean),
+                    geom_hline(data=m.phias,
+                               aes(yintercept=mean, color=param),
                                linetype="dashed") +
-                    geom_errorbar(data=subset(out, param=="phi.A.F"), 
-                                  aes(x=year, 
-                                      ymin=low, ymax=high, 
-                                      width=0.4)) +
+                   geom_point(data=phias,
+                               aes(x=year, y=mean, color=param),
+                               size=1.5) +
+                    geom_line(data=phias,
+                              aes(x=year, y=mean, color=param)) + 
+                    geom_errorbar(data=phias,
+                                  aes(x=year, color=param,
+                                      ymin=low, ymax=high),
+                                  width=0.4) +
+                    scale_color_manual(values=c("phi.A.F"="black",
+                                                "phi.A.M"="darkgray",
+                                                "m.phi.A.F"="black",
+                                                "m.phi.A.M"="darkgray")) +
+                    guides(color=FALSE) +
                     annotate(geom="text", 
                              label="paste(\"(\")*bold(E)*paste(\")\")", 
                              parse=TRUE, 
@@ -447,36 +465,37 @@ yearPlots[[6]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Immigration (both sexes)
+imms <- out %>%
+          subset(param %in% c("omega.F", "omega.M")) %>%
+          select(param, year, mean, low, high) %>%
+          mutate(year=pmap_dbl(list(param, year), shiftMales))
 
 # derive arithmetic means
-mOmega.F <- mean(rowMeans(ipm_sim[["omega.F"]]))
-mOmega.M <- mean(rowMeans(ipm_sim[["omega.M"]]))
+mOmega.F <- data_frame(param="m.omega.F", 
+                       mean=mean(rowMeans(ipm_sim[["omega.F"]])))
+mOmega.M <- data_frame(param="m.omega.M", 
+                       mean=mean(rowMeans(ipm_sim[["omega.M"]])))
+
+m.imms <- bind_rows(mOmega.F, mOmega.M) 
 
 yearPlots[[7]] <- ggplot() +
-                    geom_point(data=subset(out, param=="omega.M"), 
-                               aes(x=year+0.3, y=mean), 
-                               size=1.5, 
-                               colour="dark gray") +
-                    geom_line(data=subset(out, param=="omega.M"), 
-                              aes(x=year+0.3, y=mean), 
-                              colour="dark gray") +
-                    geom_hline(aes(yintercept=mOmega.M),
-                               linetype="dashed", 
-                               colour="dark gray") +
-                    geom_errorbar(data=subset(out, param=="omega.M"), 
-                                  aes(x=year+0.3, ymin=low, ymax=high, 
-                                      width=0.4), 
-                                  colour="dark gray") +
-                    geom_point(data=subset(out, param=="omega.F"), 
-                               aes(x=year, y=mean), 
-                               size=1.5) +
-                    geom_line(data=subset(out, param=="omega.F"), 
-                              aes(x=year, y=mean)) +
-                    geom_hline(aes(yintercept=mOmega.F),
+                    geom_hline(data=m.imms,
+                               aes(yintercept=mean, color=param),
                                linetype="dashed") +
-                    geom_errorbar(data=subset(out, param=="omega.F"), 
-                                  aes(x=year, ymin=low, ymax=high, 
-                                      width=0.4)) +
+                   geom_point(data=imms,
+                               aes(x=year, y=mean, color=param),
+                               size=1.5) +
+                    geom_line(data=imms,
+                              aes(x=year, y=mean, color=param)) + 
+                    geom_errorbar(data=imms,
+                                  aes(x=year, color=param,
+                                      ymin=low, ymax=high),
+                                  width=0.4) +
+                    scale_color_manual(values=c("omega.F"="black",
+                                                "omega.M"="darkgray",
+                                                "m.omega.F"="black",
+                                                "m.omega.M"="darkgray")) +
+                    guides(color=FALSE) +
                     annotate(geom="text", 
                              label="paste(\"(\")*bold(F)*paste(\")\")", 
                              parse=TRUE, 
@@ -546,8 +565,10 @@ yearPlots[[8]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
 fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=8, ncol=1)
+
 ggsave("Output/Figure_4.png", fig4, 
        width=7, height=9, dpi=600, units="in")
+
 ggsave("Output/PDFs/Figure_4.pdf", fig4, device=cairo_pdf, 
        width=7, height=9, dpi=600, units="in")
 
