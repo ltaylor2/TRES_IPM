@@ -164,30 +164,28 @@ y.gof.A.M <- ldply(1:24,
 no.imm <- out %>% 
             subset(grepl("N.imm", param)) %>% 
             group_by(year) %>% 
-            summarise(mean=sum(mean), low=sum(low), high=sum(high))
+            summarise(mean=sum(mean), low=sum(low), high=sum(high)) %>%
+            mutate(param="imm")
 
-fig3 <- ggplot() +
-          geom_errorbar(data=no.imm, 
-                        aes(x=year, ymin=low, ymax=high), 
-                        colour="darkgrey", 
-                        linetype="dashed", 
+no <- out %>%
+            subset(param == "Ntot") %>%
+            select(year, mean, low, high) %>%
+            mutate(param="tot") %>%
+            bind_rows(no.imm)
+
+fig3 <- ggplot(no) +
+          geom_errorbar(aes(x=year, ymin=low, ymax=high, 
+                            colour=param, linetype=param),
                         width=0.3) +
-          geom_point(data=no.imm, 
-                     aes(x=year, y=mean), 
-                     size=1) +
-          geom_line(data=no.imm, 
-                    aes(x=year, y=mean), 
-                    linetype="dashed") +
-          geom_point(data=out[out$param == "Ntot",], 
-                     aes(x=year, y=mean), 
-                     size=1) +
-          geom_line(data=out[out$param == "Ntot",], 
-                    aes(x=year, y=mean)) +
-          geom_errorbar(data=out[out$param == "Ntot",], 
-                        aes(x=year, ymin=low, ymax=high), 
-                        width=0.3) +
+          geom_point(aes(x=year, y=mean), size=1) +
+          geom_line(aes(x=year, y=mean, linetype=param)) +
+          scale_linetype_manual(breaks=c("tot", "imm"),
+                                  labels=c("Total", "Immigrants"),
+                                  values=c("tot"="solid", "imm"="dashed")) +
+          scale_colour_manual(values=c("tot"="black", "imm"="darkgray")) +
+          guides(linetype=guide_legend(title=""), color=FALSE) +
           xlab("Year") +
-          ylab("Population size") +
+          ylab("Population size (95% BCI)") +
           ggtitle("Figure 3") + 
           scale_x_continuous(limits=c(1986.8, 2010.2),
                              breaks=seq(1987, 2010, by=1),
@@ -204,12 +202,15 @@ fig3 <- ggplot() +
                                           margin=margin(t=4), 
                                           hjust=0.5),
                 axis.text=element_text(size=6.5),
-                panel.grid=element_blank(), 
+                panel.grid=element_blank(),
+                legend.position=c(0.55, 0.75),
+                legend.text=element_text(size=10),
                 panel.border=element_blank(),
                 plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
 ggsave("Output/Figure_3.png", plot=fig3, 
        width=3.5, height=3.5, dpi=600, units="in")
+
 ggsave("Output/PDFs/Figure_3.pdf", plot=fig3, device=cairo_pdf, 
         width=3.5, height=3.5, dpi=600, units="in")
 
