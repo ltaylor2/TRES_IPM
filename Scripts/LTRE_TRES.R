@@ -430,7 +430,7 @@ LTREcors_P <- matrix(0, 11, 11,
 
 # calculate each correlation among vital rates, including BCI
 # remember, varcors are extracted from LTRE #1 covariance matrix
-# these resemble the results you'd find if you ran cor() on 
+# these are essentially the results you'd find if you ran cor() on 
 # ipm_sim results
 for (r in 1:11) {
   for (c in r:11) {

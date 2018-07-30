@@ -14,7 +14,7 @@
 # OUTPUT
 #     gof -- posterior predictive check results
 #
-# LT 4/20/18
+# LT 7/29/18
 # ------------------
 
 # goodness-of-fit (Bayesian p-values) -------------------------------------
@@ -590,8 +590,8 @@ contPlots[[2]] <- ggplot(prodandjuv_sumCont) +
                                colour="lightgray", 
                                alpha=0.5) +
                     geom_col(aes(x=year, y=sumCont), 
-                             fill="lightgreen",
-                             colour="lightgreen") +
+                             fill="#0caf58",         # green
+                             colour="#0caf58") +     # green
                     geom_col(data=diff_lams, 
                              aes(x=year, y=diff), 
                              fill=alpha("white", 0), 
@@ -654,11 +654,11 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                                                 1997, "", 1999, "", 2001, 
                                                 "", 2003, "", 2005, "", 
                                                 2007, "", 2009, "")) +
-                    scale_fill_manual(values=c("phi.A.F"="#636bf9", 
-                                               "phi.A.M"="#ff727e"),
+                    scale_fill_manual(values=c("phi.A.M"="#636bf9", # blue
+                                               "phi.A.F"="#ff727e"), # red
                                       guide=FALSE) +
-                    scale_colour_manual(values=c("phi.A.F"="#636bf9", 
-                                                 "phi.A.M"="#ff727e"),
+                    scale_colour_manual(values=c("phi.A.M"="#636bf9", # blue
+                                                 "phi.A.F"="#ff727e"), # red
                                       guide=FALSE) +
 
                     xlab("") +
@@ -698,14 +698,13 @@ contPlots[[4]] <- ggplot(subset(yearly_cont_summary,
                                                 "", 2003, "", 2005, "", 
                                                 2007, "", 2009, "")) +
                     scale_fill_manual(breaks=c("omega.F", "omega.M"),
-                                      values=c("omega.F"="#636bf9", 
-                                               "omega.M"="#ff727e"),
+                                      values=c("omega.M"="#636bf9", # blue
+                                               "omega.F"="#ff727e"), # red
                                       guide=FALSE) +
                     scale_colour_manual(breaks=c("omega.F", "omega.M"),
-                                      values=c("omega.F"="#636bf9", 
-                                               "omega.M"="#ff727e"),
+                                      values=c("omega.M"="#636bf9",  # blue
+                                               "omega.F"="#ff727e"), # red
                                       guide=FALSE) +
-
                     xlab("Year") +
                     ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
                     theme(title=element_text(size=12), 
@@ -729,14 +728,21 @@ ggsave("Output/PDFs/Figure_5.pdf", fig5, device=cairo_pdf,
 
 # Figure 6 (Appendix A)--------------------------------------------------------
 # For yearly G.O.F
+
+ygofA <- bind_rows(y.gof.A.M, y.gof.A.F)
+
 fig6 <- ggplot() +
           geom_hline(aes(yintercept=0.5), 
                      colour="lightgray", 
                      linetype="dashed") +
-          geom_line(data=y.gof.A.M, 
-                    aes(x=year+1986, y=bP), 
-                    colour="darkgray") +
-          geom_line(data=y.gof.A.F, aes(x=year+1986, y=bP)) +
+          geom_line(data=ygofA, aes(x=year+1986, y=bP, color=name)) +
+          geom_point(data=ygofA, aes(x=year+1986, y=bP, color=name), 
+                     size=1) +
+          scale_color_manual(labels=c("y.fit.A.F"="Female",
+                                      "y.fit.A.M"="Male"),
+                             values=c("y.fit.A.F"="black",
+                                      "y.fit.A.M"="darkgray")) +
+          guides(color=guide_legend(title=element_blank())) +
           scale_y_continuous(limits=c(0, 1)) +
           scale_x_continuous(limits=c(1986.5, 2010.5),
                              breaks=seq(1987, 2010, by=1),
@@ -749,6 +755,8 @@ fig6 <- ggplot() +
           xlab("Year") +
           ggtitle("Figure 6 in Appendix A") +
           theme(title=element_text(size=12), 
+                legend.text=element_text(size=10),
+                legend.position=c(0.67, 0.83),
                 axis.title.y=element_text(size=10,
                                           margin=margin(r=4), 
                                           vjust=0.5),
