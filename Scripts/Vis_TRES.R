@@ -165,7 +165,7 @@ no.imm <- out %>%
             subset(grepl("N.imm", param)) %>% 
             group_by(year) %>% 
             summarise(mean=sum(mean), low=sum(low), high=sum(high)) %>%
-            mutate(param="imm")
+            mutate(param="imm", year=year+0.2)
 
 no <- out %>%
             subset(param == "Ntot") %>%
@@ -187,7 +187,7 @@ fig3 <- ggplot(no) +
           xlab("Year") +
           ylab("Population size (95% BCI)") +
           ggtitle("Figure 3") + 
-          scale_x_continuous(limits=c(1986.8, 2010.2),
+          scale_x_continuous(limits=c(1986.8, 2010.5),
                              breaks=seq(1987, 2010, by=1),
                              labels=c(1987, "", 1989, "", 1991,
                                       "", 1993, "", 1995, "",
@@ -662,7 +662,7 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                                       guide=FALSE) +
 
                     xlab("") +
-                    ylab("") +
+                    ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
                     theme(title=element_text(size=12), 
                           axis.title.y=element_text(size=10, 
                                                     margin=margin(r=8), 
@@ -706,7 +706,7 @@ contPlots[[4]] <- ggplot(subset(yearly_cont_summary,
                                                "omega.F"="#ff727e"), # red
                                       guide=FALSE) +
                     xlab("Year") +
-                    ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
+                    ylab("") +
                     theme(title=element_text(size=12), 
                           axis.title.y=element_text(size=10, 
                                                     margin=margin(r=8), 
@@ -729,14 +729,16 @@ ggsave("Output/PDFs/Figure_5.pdf", fig5, device=cairo_pdf,
 # Figure 6 (Appendix A)--------------------------------------------------------
 # For yearly G.O.F
 
-ygofA <- bind_rows(y.gof.A.M, y.gof.A.F)
 
 fig6 <- ggplot() +
           geom_hline(aes(yintercept=0.5), 
                      colour="lightgray", 
                      linetype="dashed") +
-          geom_line(data=ygofA, aes(x=year+1986, y=bP, color=name)) +
-          geom_point(data=ygofA, aes(x=year+1986, y=bP, color=name), 
+          geom_line(data=y.gof.A.M, aes(x=year+1986.2, y=bP, color=name)) +
+          geom_point(data=y.gof.A.M, aes(x=year+1986.2, y=bP, color=name), 
+                     size=1) +
+          geom_line(data=y.gof.A.F, aes(x=year+1986, y=bP, color=name)) +
+          geom_point(data=y.gof.A.F, aes(x=year+1986, y=bP, color=name),
                      size=1) +
           scale_color_manual(labels=c("y.fit.A.F"="Female",
                                       "y.fit.A.M"="Male"),
