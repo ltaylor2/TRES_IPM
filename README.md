@@ -10,7 +10,7 @@ Diagnosing causes of population declines requires an understanding of the contri
 ## Required Software and Packages
 [R](https://www.r-project.org/)\
 [JAGS](http://mcmc-jags.sourceforge.net/)\
-R Packages (model/analysis/making a beep noise):\
+R Packages (model/analysis/making a beep noise):
 * [jagsUI](https://cran.r-project.org/web/packages/jagsUI/index.html)
 * [plyr](https://cran.r-project.org/web/packages/plyr/index.html)
 * [tidyverse](https://cran.r-project.org/web/packages/tidyverse/index.html)
