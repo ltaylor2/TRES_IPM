@@ -186,7 +186,6 @@ fig3 <- ggplot(no) +
           guides(linetype=guide_legend(title=""), color=FALSE) +
           xlab("Year") +
           ylab("Population size (95% BCI)") +
-          ggtitle("Figure 3") + 
           scale_x_continuous(limits=c(1986.8, 2010.5),
                              breaks=seq(1987, 2010, by=1),
                              labels=c(1987, "", 1989, "", 1991,
@@ -225,10 +224,8 @@ shiftMales <- function(param, year) {
 }
 yearPlots <- list()
 
-yearPlots[[1]] <- ggdraw() + draw_label("Figure 4", fontface='bold')
-
 # Clutch size
-yearPlots[[2]] <- ggplot() +
+yearPlots[[1]] <- ggplot() +
                     geom_point(data=subset(out, param=="cs"), 
                                aes(x=year, y=mean), 
                                size=1.5) +
@@ -241,10 +238,10 @@ yearPlots[[2]] <- ggplot() +
                                       ymin=low, ymax=high, 
                                       width=0.4)) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(A)*paste(\")\")", 
+                             label="bold(A)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, vjust=1.1, 
+                             hjust=-0.6, vjust=1.1,
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -268,7 +265,7 @@ yearPlots[[2]] <- ggplot() +
                           plot.margin = unit(c(0.05, 0, 0.01, 0.05), "in"))
 
 # Hatching success
-yearPlots[[3]] <- ggplot() +
+yearPlots[[2]] <- ggplot() +
                     geom_point(data=subset(out, param=="hs"), 
                                aes(x=year, y=mean), size=1.5) +
                     geom_line(data=subset(out, param=="hs"), 
@@ -279,11 +276,11 @@ yearPlots[[3]] <- ggplot() +
                                       ymin=low, ymax=high, 
                                       width=0.4)) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(B)*paste(\")\")", 
+                             label="bold(B)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, 
-                             vjust=1.1, size=3.5) +
+                             hjust=-0.6, vjust=1.1,
+                             size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
                                        labels=c(1987, "", 1989, "", 1991,
@@ -309,7 +306,7 @@ yearPlots[[3]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Fledging success
-yearPlots[[4]] <- ggplot() +
+yearPlots[[3]] <- ggplot() +
                     geom_point(data=subset(out, param=="fs"), 
                                aes(x=year, y=mean), size=1.5) +
                     geom_line(data=subset(out, param=="fs"), 
@@ -321,11 +318,11 @@ yearPlots[[4]] <- ggplot() +
                                       ymin=low, ymax=high, 
                                       width=0.4)) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(C)*paste(\")\")", 
+                             label="bold(C)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, 
-                             vjust=1.1, size=3.5) +
+                             hjust=-0.6, vjust=1.1, 
+                             size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
                                        labels=c(1987, "", 1989, "", 1991,
@@ -357,7 +354,7 @@ m.phijs <- out %>%
             subset(param %in% c("m.phi.J.F", "m.phi.J.M")) %>%
             select(param, mean)
 
-yearPlots[[5]] <- ggplot() +
+yearPlots[[4]] <- ggplot() +
                     geom_hline(data=m.phijs,
                                aes(yintercept=mean, color=param),
                                linetype="dashed") +
@@ -381,10 +378,10 @@ yearPlots[[5]] <- ggplot() +
                                                 0.05, 0.07, 0.09)) +
                     guides(color=guide_legend(title="", ncol=2)) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(D)*paste(\")\")", 
+                             label="bold(D)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, vjust=1.1, 
+                             hjust=-0.6, vjust=1.1, 
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -419,7 +416,7 @@ m.phias <- out %>%
             subset(param %in% c("m.phi.A.F", "m.phi.A.M")) %>%
             select(param, mean)
 
-yearPlots[[6]] <- ggplot() +
+yearPlots[[5]] <- ggplot() +
                     geom_hline(data=m.phias,
                                aes(yintercept=mean, color=param),
                                linetype="dashed") +
@@ -438,10 +435,10 @@ yearPlots[[6]] <- ggplot() +
                                                 "m.phi.A.M"="darkgray")) +
                     guides(color=FALSE) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(E)*paste(\")\")", 
+                             label="bold(E)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, vjust=1.1, 
+                             hjust=-0.6, vjust=1.1, 
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -478,7 +475,7 @@ mOmega.M <- data_frame(param="m.omega.M",
 
 m.imms <- bind_rows(mOmega.F, mOmega.M) 
 
-yearPlots[[7]] <- ggplot() +
+yearPlots[[6]] <- ggplot() +
                     geom_hline(data=m.imms,
                                aes(yintercept=mean, color=param),
                                linetype="dashed") +
@@ -497,10 +494,10 @@ yearPlots[[7]] <- ggplot() +
                                                 "m.omega.M"="darkgray")) +
                     guides(color=FALSE) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(F)*paste(\")\")", 
+                             label="bold(F)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, vjust=1.1, 
+                             hjust=-0.6, vjust=1.1, 
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -524,7 +521,7 @@ yearPlots[[7]] <- ggplot() +
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Lambda
-yearPlots[[8]] <- ggplot() +
+yearPlots[[7]] <- ggplot() +
                     geom_line(data=subset(out, param=="lambda"), 
                               aes(x=year, y=mean)) +
                     geom_hline(aes(yintercept=subset(out, 
@@ -537,10 +534,10 @@ yearPlots[[8]] <- ggplot() +
                                aes(x=year, y=mean), 
                                size=1.5) +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(G)*paste(\")\")", 
+                             label="bold(G)", 
                              parse=TRUE, 
                              x=-Inf, y=Inf, 
-                             hjust=-0.5, vjust=1.1, 
+                             hjust=-0.6, vjust=1.1, 
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -552,7 +549,8 @@ yearPlots[[8]] <- ggplot() +
                     xlab("Year") +
                     ylab(expression(lambda)) +
                     theme(title=element_text(size=12), 
-                          axis.title.y=element_text(size=10, 
+                          axis.title.y=element_text(family="Serif",
+                                                    size=10, 
                                                     margin=margin(r=8), 
                                                     vjust=0.5,
                                                     angle=0),
@@ -564,19 +562,17 @@ yearPlots[[8]] <- ggplot() +
                           panel.border=element_blank(),
                           plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
-fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=8, ncol=1)
+fig4 <- plot_grid(plotlist=yearPlots, align="hv", nrow=7, ncol=1)
 
 ggsave("Output/Figure_4.png", fig4, 
-       width=7, height=9, dpi=600, units="in")
+       width=7, height=8, dpi=600, units="in")
 
 ggsave("Output/PDFs/Figure_4.pdf", fig4, device=cairo_pdf, 
-       width=7, height=9, dpi=600, units="in")
+       width=7, height=8, dpi=600, units="in")
 
 # Figure 5 ------------------------------------------------------------------
 
 contPlots <- list()
-
-contPlots[[1]] <- ggdraw() + draw_label("Figure 5", fontface='bold')
 
 # Productivity and Juvenile Survival summed
 prodandjuv_sumCont <- yearly_cont_summary %>%
@@ -585,28 +581,22 @@ prodandjuv_sumCont <- yearly_cont_summary %>%
                         group_by(year) %>%
                         summarise(sumCont=sum(mean))
 
-contPlots[[2]] <- ggplot(prodandjuv_sumCont) +
+contPlots[[1]] <- ggplot(prodandjuv_sumCont) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
                                alpha=0.5) +
                     geom_col(aes(x=year, y=sumCont), 
                              fill="#0caf58",         # green
-                             colour="#0caf58") +     # green
+                             colour="#0caf58") +     
                     geom_col(data=diff_lams, 
                              aes(x=year, y=diff), 
                              fill=alpha("white", 0), 
                              colour="darkgray") +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(A)*paste(\")\")~paste(\"Productivity and\")", 
+                             label="bold(A)",
                              parse=TRUE, 
-                             x=1986.5, y=0.60, 
-                             hjust=0, 
-                             size=3.5) +
-                    annotate(geom="text", 
-                             label="paste(\"juvenile survival\")", 
-                             parse=TRUE, 
-                             x=1987.47, y=0.425, 
-                             hjust=0, 
+                             x=-Inf, y=Inf, 
+                             hjust=-0.6, vjust=1.1,
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -631,7 +621,7 @@ contPlots[[2]] <- ggplot(prodandjuv_sumCont) +
                           plot.margin = unit(c(0.05, 0, 0.01, 0.05), "in"))
 
 # Adult survival (both sexes)
-contPlots[[3]] <- ggplot(subset(yearly_cont_summary, 
+contPlots[[2]] <- ggplot(subset(yearly_cont_summary, 
                                 key %in% c("phi.A.F", "phi.A.M"))) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
@@ -642,10 +632,10 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                              fill=alpha("white", 0), 
                              colour="darkgray") +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(B)*paste(\")\")~paste(\"Adult survival\")", 
+                             label="bold(B)",
                              parse=TRUE, 
-                             x=1986.5, y=0.60, 
-                             hjust=0, 
+                             x=-Inf, y=Inf, 
+                             hjust=-0.6, vjust=1.1,
                              size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
@@ -660,7 +650,6 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                     scale_colour_manual(values=c("phi.A.M"="#636bf9", # blue
                                                  "phi.A.F"="#ff727e"), # red
                                       guide=FALSE) +
-
                     xlab("") +
                     ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
                     theme(title=element_text(size=12), 
@@ -676,7 +665,7 @@ contPlots[[3]] <- ggplot(subset(yearly_cont_summary,
                           plot.margin = unit(c(0, 0, 0.01, 0.05), "in"))
 
 # Immigration (both sexes)
-contPlots[[4]] <- ggplot(subset(yearly_cont_summary, 
+contPlots[[3]] <- ggplot(subset(yearly_cont_summary, 
                          key %in% c("omega.F", "omega.M"))) +
                     geom_hline(aes(yintercept=0), 
                                colour="lightgray", 
@@ -686,10 +675,11 @@ contPlots[[4]] <- ggplot(subset(yearly_cont_summary,
                              fill=alpha("white", 0), 
                              colour="darkgray") +
                     annotate(geom="text", 
-                             label="paste(\"(\")*bold(C)*paste(\")\")~paste(\"Immigration\")", 
+                             label="bold(C)",
                              parse=TRUE, 
-                             x=1986.5, y=0.60, 
-                             hjust=0, size=3.5) +
+                             x=-Inf, y=Inf, 
+                             hjust=-0.6, vjust=1.1,
+                             size=3.5) +
                     scale_x_continuous(limits=c(1986.5, 2010.5),
                                        breaks=seq(1987, 2010, by=1),
                                        labels=c(1987, "", 1989, "", 1991,
@@ -719,12 +709,12 @@ contPlots[[4]] <- ggplot(subset(yearly_cont_summary,
                           panel.border=element_blank(),
                           plot.margin = unit(c(0, 0, 0.05, 0.05), "in"))
 
-fig5 <- plot_grid(plotlist=contPlots, align="hv", nrow=4, ncol=1)
+fig5 <- plot_grid(plotlist=contPlots, align="hv", nrow=3, ncol=1)
 
 ggsave("Output/Figure_5.png", fig5, 
-       width=7, height=6, dpi=600, units="in")
+       width=7, height=5, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_5.pdf", fig5, device=cairo_pdf, 
-       width=7, height=6, dpi=600, units="in")
+       width=7, height=5, dpi=600, units="in")
 
 # Figure 6 (Appendix A)--------------------------------------------------------
 # For yearly G.O.F
@@ -753,11 +743,9 @@ fig6 <- ggplot() +
                                       1997, "", 1999, "", 2001, 
                                       "", 2003, "", 2005, "", 
                                       2007, "", 2009, "")) +
-          ylab(expression(italic(PPP)*paste("-value"))) +
+          ylab(expression(paste("Posterior predictive")~italic(P)~paste("value"))) +
           xlab("Year") +
-          ggtitle("Figure 6 in Appendix A") +
-          theme(title=element_text(size=12), 
-                legend.text=element_text(size=10),
+          theme(legend.text=element_text(size=10),
                 legend.position=c(0.67, 0.83),
                 axis.title.y=element_text(size=10,
                                           margin=margin(r=4), 
@@ -779,15 +767,10 @@ ggsave("Output/PDFs/Figure_6.pdf", plot=fig6, device=cairo_pdf,
 
 cont_appendixPlots <- list()
 
-cont_appendixPlots[[1]] <- ggdraw() + draw_label("Figure 7 in Appendix B", fontface='bold')
-
-cont_appendixPlots[[2]] <- ggplot()
-
-
-cont_appendixPlots[[3]] <- ggplot()
+cont_appendixPlots[[1]] <- ggplot()
 
 # Clutch size
-cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
+cont_appendixPlots[[2]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -825,7 +808,7 @@ cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "cs")) +
                                   plot.margin = unit(c(.05, 0, 0, .05), "in"))
 
 # Hatching success
-cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
+cont_appendixPlots[[3]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -863,7 +846,7 @@ cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, key == "hs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.00), "in"))
 
 # fledging success
-cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
+cont_appendixPlots[[4]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
                                        alpha=0.5) +
@@ -901,7 +884,7 @@ cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, key == "fs")) +
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (FEMALE)
-cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[5]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -942,7 +925,7 @@ cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Juvenile survival (MALE)
-cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[6]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "phi.J.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -985,7 +968,7 @@ cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Adult survival (FEMALE)
-cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[7]] <- ggplot(subset(yearly_cont_summary, 
                                   key == "phi.A.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1013,7 +996,7 @@ cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary,
                                                         2007, "", 2009, "")) +
                             guides(fill=FALSE) +
                             xlab("Year") +
-                            ylab("") +
+                            ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
                             theme(title=element_text(size=12), 
                                   axis.title.y=element_text(size=10, 
                                                             margin=margin(r=8),
@@ -1028,7 +1011,7 @@ cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Adult survival (MALE)
-cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[8]] <- ggplot(subset(yearly_cont_summary, 
                                         key == "phi.A.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1071,7 +1054,7 @@ cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Immigration (FEMALE)
-cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[9]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1114,7 +1097,7 @@ cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0), "in"))
 
 # Immigration (MALE)
-cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[10]] <- ggplot(subset(yearly_cont_summary, 
                                          key == "omega.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1157,7 +1140,7 @@ cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary,
                                   plot.margin = unit(c(0, 0, 0, 0.05), "in"))
 
 # Proportional abundance (FEMALE)
-cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[11]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.F")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", alpha=0.5) +
@@ -1184,7 +1167,7 @@ cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary,
                                                         "07", "", "09", "")) +
                             guides(fill=FALSE) +
                             xlab("Year") +
-                            ylab(bquote(.("Contribution to") ~ Delta * lambda[t])) +
+                            ylab("") +
                             theme(title=element_text(size=12), 
                                 axis.title.y=element_text(size=10, 
                                                           margin=margin(r=8),
@@ -1199,7 +1182,7 @@ cont_appendixPlots[[13]] <- ggplot(subset(yearly_cont_summary,
 
 
 # Proportional abundance (MALE)
-cont_appendixPlots[[14]] <- ggplot(subset(yearly_cont_summary, 
+cont_appendixPlots[[12]] <- ggplot(subset(yearly_cont_summary, 
                                           key == "prop.M")) +
                             geom_hline(aes(yintercept=0), 
                                        colour="lightgray", 
@@ -1240,9 +1223,9 @@ cont_appendixPlots[[14]] <- ggplot(subset(yearly_cont_summary,
                                   panel.border=element_blank(),
                                   plot.margin = unit(c(0, 0, 0.0, 0.00), "in"))
 
-fig7 <- plot_grid(plotlist=cont_appendixPlots, align="hv", nrow=7, ncol=2)
+fig7 <- plot_grid(plotlist=cont_appendixPlots, align="hv", nrow=6, ncol=2)
 
 ggsave("Output/Figure_7.png", fig7, 
-       width=7, height=10, dpi=600, units="in")
+       width=7, height=8, dpi=600, units="in")
 ggsave("Output/PDFs/Figure_7.pdf", fig7, device=cairo_pdf, 
-       width=7, height=10, dpi=600, units="in")
+       width=7, height=8, dpi=600, units="in")
