@@ -1,7 +1,7 @@
-# Demographic drivers of collapse of an island Tree Swallow population
+# Demographic drivers of collapse of an island population of Tree Swallows
 
-Repository for Data/Model/Analysis for manuscript\
-In review\
+Repository for Data/Model/Analysis/Visualization Code\
+In press\
 **Authors**: L.U. Taylor, B.K. Woodworth, B.K. Sandercock, and N.T. Wheelwright
 
 **Abstract**:
