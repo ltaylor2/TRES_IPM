@@ -1,8 +1,8 @@
-# Demographic drivers of collapse of an island population of Tree Swallows
+﻿# Demographic drivers of collapse of an island population of Tree Swallows
 
 Repository for Data/Model/Analysis/Visualization Code\
-In press\
-**Authors**: L.U. Taylor, B.K. Woodworth, B.K. Sandercock, and N.T. Wheelwright
+Taylor, L. U., B. K. Woodworth, B. K. Sandercock, and N. T. Wheelwright. 2018. Demographic drivers of collapse in an island population of Tree Swallows. The Condor 120(4):828–841.
+\
 
 **Abstract**:
 Diagnosing causes of population declines requires an understanding of the contributions of demographic vital rates to inter-annual variability and long-term changes in population size. At Kent Island, New Brunswick, Canada, an isolated population of Tree Swallows (Tachycineta bicolor) collapsed between 1987 and 2010, providing a unique opportunity to reconstruct how demographic rates drive population dynamics. We fit an integrated population model to 24 years of population count, reproductive success, and capture-recapture data to generate annual estimates of productivity, juvenile and adult survival, immigration, and the finite rate of population change (λ). The Kent Island population declined from 202 to 12 breeding adults over 24 years, with a geometric mean decline of 11.6% per year. Annual apparent survival of adults averaged 56% across sexes, whereas annual survival and recruitment of juveniles never exceeded 6%. Transient life table response experiments revealed that variation in male and female immigration rates were the major contributors to both overall and inter-annual variation in λ, followed by female and male adult survival. Local recruitment and reproductive rates had little effect on variation in λ. Given broad-scale regional declines in Tree Swallows, our study shows how declines of isolated populations can be driven by reductions in immigration, especially when coupled with variation in adult survival and low local recruitment.
