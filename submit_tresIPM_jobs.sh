@@ -12,7 +12,7 @@
 #
 cd /home/lut2/project/TRES_IPM
 
-FINALYEAR=11
+FINALYEAR=2011
 JOBTXT=""
 
 for ENDYEAR in $(seq 1997 $FINALYEAR)
