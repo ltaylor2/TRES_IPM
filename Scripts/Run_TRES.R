@@ -25,8 +25,8 @@ y.M <- y.M[1:nyears]
 numEggs <- numEggs[1:nyears]
 numHatchlings <- numHatchlings[1:nyears]
 numFledglings <- numFledglings[1:nyears]
-marray.F <- marray.F[,1:nyears]
-marray.M <- marray.M[,1:nyears]
+marray.F <- marray.F[c(1:nyears, 24:(24+nyears)),1:nyears]
+marray.M <- marray.M[c(1:nyears, 24:(24+nyears)),1:nyears]
 r.F <- rowSums(marray.F)
 r.M <- rowSums(marray.M)
 
