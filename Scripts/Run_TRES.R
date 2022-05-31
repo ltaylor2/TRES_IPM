@@ -27,8 +27,8 @@ numHatchlings <- numHatchlings[1:nyears]
 numFledglings <- numFledglings[1:nyears]
 marray.F <- marray.F[,1:nyears]
 marray.M <- marray.M[,1:nyears]
-r.F <- r.F[c(1:(nyears-2), 23:(23+nyears-2))]
-r.M <- r.M[c(1:(nyears-2), 23:(23+nyears-2))]
+r.F <- rowSums(marray.F)
+r.M <- rowSums(marray.M)
 
 
 # Run model ---------------------------------------------------------------
