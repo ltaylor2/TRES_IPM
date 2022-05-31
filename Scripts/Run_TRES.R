@@ -11,9 +11,25 @@
 # LT 2/20/18
 # ------------------
 
-setwd("~/TRES")
 # Initialize packages and data
 source("Scripts/Init_TRES.R", echo=TRUE)
+
+args <- commandArgs(trailing=TRUE)
+endYear <- args[grep("--finalYear", args)+1]
+
+nyears <- endYear - 1987 + 1
+
+numNests <- numNests[1:nyears]
+y.F <- y.F[1:nyears]
+y.M <- y.M[1:nyears]
+numEggs <- numEggs[1:nyears]
+numHatchlings <- numHatchlings[1:nyear]
+numFledglings <- numFledglings[1:nyear]
+marray.F <- marray.F[,1:nyear]
+marray.M <- marray.M[,1:nyear]
+r.F <- r.F[1:nyear]
+r.M <- r.M[1:nyear]
+
 
 # Run model ---------------------------------------------------------------
 # initializing JAGS data objects and priors
@@ -95,8 +111,11 @@ out$year <- as.numeric(out$year) + 1986
 
 ipm_sim <- ipm$sims.list    # the raw results at every iterations
 
-library(beepr)
-beep(3)
+saveRDS(out, file=paste0("Output/ipm_out_endYear", endYear, ".rds"))
+saveRDS(ipm_sim, file=paste0("Output/ipm_sim_endYear", endYear, ".rds"))
 
-source("Scripts/LTRE_TRES.R", echo=TRUE)
-source("Scripts/Vis_TRES.R", echo=TRUE)
+# library(beepr)
+# beep(3)
+
+# source("Scripts/LTRE_TRES.R", echo=TRUE)
+# source("Scripts/Vis_TRES.R", echo=TRUE)
