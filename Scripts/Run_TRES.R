@@ -25,10 +25,10 @@ y.M <- y.M[1:nyears]
 numEggs <- numEggs[1:nyears]
 numHatchlings <- numHatchlings[1:nyears]
 numFledglings <- numFledglings[1:nyears]
-marray.F <- marray.F[,1:nyears]
-marray.M <- marray.M[,1:nyears]
-r.F <- r.F[1:nyears]
-r.M <- r.M[1:nyears]
+marray.F <- marray.F[,1:(nyears-1)]
+marray.M <- marray.M[,1:(nyears-1)]
+r.F <- r.F[c(1:(nyears-2), 23:(23+nyears-2))]
+r.M <- r.M[c(1:(nyears-2), 23:(23+nyears-2))]
 
 
 # Run model ---------------------------------------------------------------
