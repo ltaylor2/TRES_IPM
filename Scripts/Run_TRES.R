@@ -15,20 +15,20 @@
 source("Scripts/Init_TRES.R", echo=TRUE)
 
 args <- commandArgs(trailing=TRUE)
-endYear <- args[grep("--finalYear", args)+1]
+endYear <- args[grep("--endYear", args)+1]
 
-nyears <- endYear - 1987 + 1
+nyears <- as.numeric(endYear) - 1987 + 1
 
 numNests <- numNests[1:nyears]
 y.F <- y.F[1:nyears]
 y.M <- y.M[1:nyears]
 numEggs <- numEggs[1:nyears]
-numHatchlings <- numHatchlings[1:nyear]
-numFledglings <- numFledglings[1:nyear]
-marray.F <- marray.F[,1:nyear]
-marray.M <- marray.M[,1:nyear]
-r.F <- r.F[1:nyear]
-r.M <- r.M[1:nyear]
+numHatchlings <- numHatchlings[1:nyears]
+numFledglings <- numFledglings[1:nyears]
+marray.F <- marray.F[,1:nyears]
+marray.M <- marray.M[,1:nyears]
+r.F <- r.F[1:nyears]
+r.M <- r.M[1:nyears]
 
 
 # Run model ---------------------------------------------------------------
