@@ -17,16 +17,16 @@ source("Scripts/Init_TRES.R", echo=TRUE)
 args <- commandArgs(trailing=TRUE)
 endYear <- args[grep("--endYear", args)+1]
 
-nyears <- as.numeric(endYear) - 1987 + 1
+nyears <- as.numeric(endYear) - 1987
 
 numNests <- numNests[1:nyears]
 y.F <- y.F[1:nyears]
 y.M <- y.M[1:nyears]
 numEggs <- numEggs[1:nyears]
-numHatchlings <- numHatchlings[1:nyears]
-numFledglings <- numFledglings[1:nyears]
-marray.F <- marray.F[c(1:(nyears-1), 24:(24+nyears-1)),1:nyears]
-marray.M <- marray.M[c(1:(nyears-1), 24:(24+nyears-1)),1:nyears]
+numHatchlings <- numHatchlings[1:(nyears-1)]
+numFledglings <- numFledglings[1:(nyears-1)]
+marray.F2 <- marray.F[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
+marray.M <- marray.M[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
 r.F <- rowSums(marray.F)
 r.M <- rowSums(marray.M)
 
@@ -92,7 +92,7 @@ params <- c("lambda", "m.lambda",
 # call JAGS from R
 ipm <- jags(data=jags.data, inits=jags.inits, parameters.to.save=params, 
             model.file="Scripts/ipm.TRES.bug",
-            n.chains=3, n.thin=20, n.iter=600000, n.burnin=300000, 
+            n.chains=3, n.thin=20, n.iter=300000, n.burnin=150000, 
             parallel=TRUE)
 
 # summarize ipm output for analyses/visualization
