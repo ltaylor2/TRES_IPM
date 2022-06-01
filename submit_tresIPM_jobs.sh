@@ -17,7 +17,7 @@ JOBTXT=""
 
 for ENDYEAR in $(seq 1997 $FINALYEAR)
 do
-    JOBTXT+="module load miniconda; source activate tres; cd /home/lut2/project/TRES_IPM; Rscript Scripts/Run_TRES.r --endYear ${ENDYEAR} \n"
+    JOBTXT+="module load miniconda; source activate tres; cd /home/lut2/project/TRES_IPM; Rscript Scripts/Run_TRES.R --endYear ${ENDYEAR} \n"
 done
 
 echo -e $JOBTXT > tresIPM_joblist.txt
