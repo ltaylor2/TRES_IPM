@@ -23,9 +23,9 @@ numNests <- numNests[1:nyears]
 y.F <- y.F[1:nyears]
 y.M <- y.M[1:nyears]
 numEggs <- numEggs[1:nyears]
-numHatchlings <- numHatchlings[1:(nyears-1)]
-numFledglings <- numFledglings[1:(nyears-1)]
-marray.F2 <- marray.F[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
+numHatchlings <- numHatchlings[1:nyears]
+numFledglings <- numFledglings[1:nyears]
+marray.F <- marray.F[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
 marray.M <- marray.M[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
 r.F <- rowSums(marray.F)
 r.M <- rowSums(marray.M)
