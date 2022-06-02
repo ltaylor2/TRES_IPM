@@ -1,0 +1,3 @@
+Submitted batch job 26867351
+submitting:
+ sbatch  --array=0-14 --output=dsq-tresIPM_joblist-%A_%2a-%N.out --job-name=dsq-tresIPM_joblist -c 3 --mem-per-cpu 7000 -t 1-00:00:00 --mail-type ALL /ysm-gpfs/apps/software/dSQ/1.05/dSQBatch.py --job-file /gpfs/ysm/project/prum/lut2/TRES_IPM/tresIPM_joblist.txt --status-dir /gpfs/ysm/project/prum/lut2/TRES_IPM
