@@ -34,6 +34,8 @@ library("tidyverse")
 args <- commandArgs(trailing=TRUE)
 endYear <- args[grep("--endYear", args)+1]
 
+endYear <- 2011
+
 # pull IPM posteriors
 ipm_sim <- readRDS(paste0("Output/ipm_sim_endYear", endYear, ".rds"))    
 numIters <- nrow(ipm_sim[[1]])

@@ -59,3 +59,55 @@ plot_spatial <- ggplot(spatial_tallies) +
 
 ggsave(plot_spatial, file="Output/Plot_spatial_occupancy.png",
 	  width=4, height=11)
+
+
+# See if summary contributions change
+readContSummary <- function(endYear) {
+	summary <- readRDS(paste0("Output/cont_summary_endYear", endYear, ".rds")) %>%
+			mutate(End_Year = endYear)
+	return(summary)
+}
+
+parameterNames <- c("phi.A.F" = "AdSurvF",
+				    "phi.A.M" = "AdSurvM",
+				    "phi.J.F" = "JvSurvF",
+				    "phi.J.M" = "JvSurvM",
+				    "cs" = "Clutch",
+				    "hs" = "Hatch",
+				    "fs" = "Fledge",
+				    "omega.F" = "ImmF",
+				    "omega.M" = "ImmM",
+				    "prop.F" = "PropF",
+				    "prop.M" = "PropM")
+
+contSummaries <- map_df(1997:2011, readContSummary) %>%
+			  group_by(End_Year) %>%
+			  summarize_all(mean) %>%
+			  pivot_longer(-End_Year, 
+			  			   names_to="Parameter",
+			  			   values_to="Contribution") %>%
+			  arrange(End_Year, -Contribution) %>%
+			  group_by(End_Year) %>%
+			  mutate(Rank = rank(-Contribution)) %>%
+			  mutate(Name = map_chr(Parameter, ~ parameterNames[.])) %>%
+			  filter(Rank <= 5)
+
+ggplot(contSummaries) +
+	  geom_text(aes(x=End_Year, y=Rank, label=Name)) +
+	  scale_y_reverse()
+
+getOut <- function(endYear) {
+	out <- readRDS(paste0("Output/ipm_out_endYear", endYear, ".rds")) %>%
+			mutate(End_Year = endYear) %>%
+			as_tibble()
+	return(out)
+}
+
+outs <- map_df(1997:2011, getOut)
+
+
+nos <- outs %>%
+	filter(param=="Ntot")
+
+ggplot(nos) +
+	geom_line(aes(x=year, y=mean, colour=End_Year, group=End_Year))
