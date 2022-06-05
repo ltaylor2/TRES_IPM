@@ -91,7 +91,3 @@ contSummaries <- map_df(1997:2011, readContSummary) %>%
 			  mutate(Rank = rank(-Contribution)) %>%
 			  mutate(Name = map_chr(Parameter, ~ parameterNames[.])) %>%
 			  filter(Rank <= 5)
-
-# NOTE THESE ARE BROKEN -- I THINK IT'S HOW I SUBINDEX THE MARRAY, WHICH MAKES ALL
-#	OF THE NON-2011 ENDYEARS LOOKS VERY DIFFERENT THAN THE FULL ARRAY
-#	TO SUBSET YEARS, JUST PRODUCE THE MARRAY FROM RAW DATA?

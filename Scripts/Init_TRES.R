@@ -125,14 +125,14 @@ males.J <- males %>% subset(Banding_Age == "N")
 females.A <- females %>% subset(Banding_Age != "N")
 males.A <- males %>% subset(Banding_Age != "N")
 
-obs.J.F <- matrix(0, nrow=nrow(females.J), ncol=24, 
+obs.J.F <- matrix(0, nrow=nrow(females.J), ncol=nyears, 
 				  dimnames=list(as.character(females.J$Band_ID)))
-obs.J.M <- matrix(0, nrow=nrow(males.J), ncol=24,
+obs.J.M <- matrix(0, nrow=nrow(males.J), ncol=nyears,
 				  dimnames=list(as.character(males.J$Band_ID)))
 
-obs.A.F <- matrix(0, nrow=nrow(females.A), ncol=24, 
+obs.A.F <- matrix(0, nrow=nrow(females.A), ncol=nyears, 
 				  dimnames=list(as.character(females.A$Band_ID)))
-obs.A.M <- matrix(0, nrow=nrow(males.A), ncol=24, 
+obs.A.M <- matrix(0, nrow=nrow(males.A), ncol=nyears, 
 				  dimnames=list(as.character(males.A$Band_ID)))
 
 # mark captures and recaptures of breeding adults
@@ -199,7 +199,7 @@ r.F <- rowSums(marray.F)
 r.M <- rowSums(marray.M)
 
 # formulate observations for nest boxes
-obs.BOX <- matrix(0, nrow=length(unique(nests$Nest_ID)), ncol=24, 
+obs.BOX <- matrix(0, nrow=length(unique(nests$Nest_ID)), ncol=nyears, 
 				  dimnames=list(unique(nests$Nest_ID)))
 
 # mark "captures and recaptures" of boxes

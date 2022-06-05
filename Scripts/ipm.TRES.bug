@@ -92,8 +92,8 @@ model {
   m.hs ~ dunif(0, 1)
   m.fs ~ dunif(0, 1)
 
-  m.phi.BOX ~ dunif(0, 1)
-  m.recap.BOX ~ dunif(0, 1)
+  m.phi.BOX ~ dunif(0, 1)T(0,0.9999)
+  m.recap.BOX ~ dunif(0, 1)T(0,0.9999)
 
   # back transform means
   l.m.phi.J.F <- log(m.phi.J.F / (1-m.phi.J.F))
