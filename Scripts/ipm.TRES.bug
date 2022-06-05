@@ -332,7 +332,7 @@ model {
 
       pr.M[t+nyears-1,j] <- prod(phi.A.M[t:j]) * prod(q.A.M[t:(j-1)]) * recap.ASY.M[j]
     
-      pr.BOX[t,j] <- prod(phi.BOX[t:j]) * prod(q.BOX[t:(j-1)]) * recap.BOX[j]
+      pr.BOX[t,j] <- prod(phi.BOX[t:j]) * prod(q.BOX[t:(j-1)]) * recap.BOX[j] + 0.0000001
     }
     
     # below main diagonal

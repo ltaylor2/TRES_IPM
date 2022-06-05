@@ -84,7 +84,7 @@ params <- c("lambda", "m.lambda",
 # call JAGS from R
 ipm <- jags(data=jags.data, inits=jags.inits, parameters.to.save=params, 
             model.file="Scripts/ipm.TRES.bug",
-            n.chains=1, n.thin=20, n.iter=100000, n.burnin=20000, 
+            n.chains=3, n.thin=20, n.iter=100000, n.burnin=20000, 
             parallel=TRUE)
 
 # summarize ipm output for analyses/visualization
