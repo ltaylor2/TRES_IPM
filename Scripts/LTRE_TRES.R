@@ -29,12 +29,11 @@
 
 library("matrixStats")
 library("tidyverse")
+
 # LTRE for contributions to overall variance in lambda-------------------------
 # #1
 args <- commandArgs(trailing=TRUE)
 endYear <- args[grep("--endYear", args)+1]
-
-endYear <- 2011
 
 # pull IPM posteriors
 ipm_sim <- readRDS(paste0("Output/ipm_sim_endYear", endYear, ".rds"))    
@@ -51,6 +50,8 @@ m.omega.F <- ipm_sim[["omega.F"]][,1:(nyears-1)]
 m.omega.M <- ipm_sim[["omega.M"]][,1:(nyears-1)]
 m.prop.F <- ipm_sim[["b.F"]][,1:(nyears-1)] / ipm_sim[["Ntot"]][,1:(nyears-1)]
 m.prop.M <- ipm_sim[["b.M"]][,1:(nyears-1)] / ipm_sim[["Ntot"]][,1:(nyears-1)]
+
+m.phi.BOX <- ipm_sim[["phi.BOX"]][,1:(nyears-1)]
 
 # Calculate the transient sensitivities (first derivatives from matrix model)  
 sens.cs <- matrix(0, nrow=numIters, ncol=1)
@@ -446,4 +447,3 @@ saveRDS(cont_summary, paste0("Output/cont_summary_endYear", endYear, ".rds"))
  #   LTREcors_P[r,c] <- length(values[values>0]) / numIters
  # }
 #}
-warnings()

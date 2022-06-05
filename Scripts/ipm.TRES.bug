@@ -57,7 +57,13 @@ model {
     log(numImms.F[t]) <- l.m.numImms.F + epsilon.numImms.F[t]       
 
     # No. immigrants (MALE)
-    log(numImms.M[t]) <- l.m.numImms.M + epsilon.numImms.M[t]   
+    log(numImms.M[t]) <- l.m.numImms.M + epsilon.numImms.M[t]  
+
+    # BOX apparent survival
+    logit(phi.BOX[t]) <- l.m.phi.BOX + epsilon.phi.BOX[t]
+
+    # BOX recap
+    logit(recap.BOX[t]) <- l.m.recap.BOX + err.recap.BOX[t]
   }
   
   for (t in 1:nyears) {
@@ -86,12 +92,15 @@ model {
   m.hs ~ dunif(0, 1)
   m.fs ~ dunif(0, 1)
 
-  # back transform means
-  l.m.phi.J.F <-  log(m.phi.J.F / (1-m.phi.J.F))
-  l.m.phi.J.M <-  log(m.phi.J.M / (1-m.phi.J.M))
+  m.phi.BOX ~ dunif(0, 1)
+  m.recap.BOX ~ dunif(0, 1)
 
-  l.m.phi.A.F <-  log(m.phi.A.F / (1-m.phi.A.F))
-  l.m.phi.A.M <-  log(m.phi.A.M / (1-m.phi.A.M))
+  # back transform means
+  l.m.phi.J.F <- log(m.phi.J.F / (1-m.phi.J.F))
+  l.m.phi.J.M <- log(m.phi.J.M / (1-m.phi.J.M))
+
+  l.m.phi.A.F <- log(m.phi.A.F / (1-m.phi.A.F))
+  l.m.phi.A.M <- log(m.phi.A.M / (1-m.phi.A.M))
   
   l.m.recap.SY.F <- log(m.recap.SY.F / (1-m.recap.SY.F))
   l.m.recap.SY.M <- log(m.recap.SY.M / (1-m.recap.SY.M))
@@ -106,6 +115,9 @@ model {
   l.m.hs <-  log(m.hs / (1-m.hs))
   l.m.fs <-  log(m.fs / (1-m.fs))
   
+  l.m.phi.BOX <- log(m.phi.BOX / (1-m.phi.BOX))
+  l.m.recap.BOX <- log(m.recap.BOX / (1-m.recap.BOX))
+
   # priors for temporal variation precision
   tau.phi.J.F <- pow(sig.phi.J.F, -2)
   sig.phi.J.F ~ dunif(0, 10)
@@ -146,6 +158,12 @@ model {
   tau.fs <- pow(sig.fs, -2)
   sig.fs ~ dunif(0, 10)
 
+  tau.phi.BOX <- pow(sig.phi.BOX, -2)
+  sig.phi.BOX ~ dunif(5, 15)
+
+  tau.recap.BOX <- pow(sig.recap.BOX, -2)
+  sig.recap.BOX ~ dunif(0, 10)
+
   # Distribution of error terms for variable demographic rates
   for (t in 1:(nyears-1)) {
     epsilon.phi.J.F[t] ~ dnorm(0, tau.phi.J.F)     
@@ -162,6 +180,9 @@ model {
     
     epsilon.numImms.F[t] ~ dnorm(0, tau.numImms.F)      
     epsilon.numImms.M[t] ~ dnorm(0, tau.numImms.M)     
+
+    epsilon.phi.BOX[t] ~ dnorm(0, tau.phi.BOX)
+    err.recap.BOX[t] ~ dnorm(0, tau.recap.BOX)
   }
   
   for (t in 1:nyears) {
@@ -212,7 +233,7 @@ model {
     N.ASY.M[t] ~ dbin(phi.A.M[t-1], b.M[t-1])          
 
     N.imm.F[t] ~ dpois(numImms.F[t-1])     
-    N.imm.M[t] ~ dpois(numImms.M[t-1])    
+    N.imm.M[t] ~ dpois(numImms.M[t-1])
   }
   
   # Observation process, i.e. connecting state to data
@@ -275,6 +296,8 @@ model {
     
     marray.M[t,1:nyears] ~ dmulti(pr.M[t,], r.M[t])
     marray.M[t+nyears-1,1:nyears] ~ dmulti(pr.M[t+nyears-1,], r.M[t+nyears-1])
+
+    marray.BOX[t,1:nyears] ~ dmulti(pr.BOX[t,], r.BOX[t])
   }
     
   # m-array cell probabilities
@@ -287,12 +310,16 @@ model {
     q.A.F[t] <- 1-recap.ASY.F[t]		# probability of non-capture (ASY F)
     q.A.M[t] <- 1-recap.ASY.M[t]		# probability of non-capture (ASY M)
 
+    q.BOX[t] <- 1-recap.BOX[t]      # probability of non-capture ( BOX )
+
     # main diagonal
     pr.F[t,t] <- phi.J.F[t] * recap.SY.F[t]
     pr.F[t+nyears-1,t] <- phi.A.F[t] * recap.ASY.F[t]
 
     pr.M[t,t] <- phi.J.M[t] * recap.SY.M[t]
     pr.M[t+nyears-1,t] <- phi.A.M[t] * recap.ASY.M[t]
+
+    pr.BOX[t,t] <- phi.BOX[t] * recap.BOX[t]
 
     # above main diagonal
     for (j in (t+1):(nyears-1)){
@@ -304,6 +331,8 @@ model {
       pr.M[t,j] <- phi.J.M[t] * prod(phi.A.M[(t+1):j]) * q.J.M[t] * prod(q.A.M[t:(j-1)]) * recap.ASY.M[j] / (q.A.M[t] + 0.000001)          # avoid parent node errors
 
       pr.M[t+nyears-1,j] <- prod(phi.A.M[t:j]) * prod(q.A.M[t:(j-1)]) * recap.ASY.M[j]
+    
+      pr.BOX[t,j] <- prod(phi.BOX[t:j]) * prod(q.BOX[t:(j-1)]) * recap.BOX[j]
     }
     
     # below main diagonal
@@ -313,6 +342,8 @@ model {
       
       pr.M[t,j] <- 0
       pr.M[t+nyears-1,j] <- 0
+
+      pr.BOX[t,j] <- 0
     }
     
     # last column
@@ -321,6 +352,8 @@ model {
     
     pr.M[t,nyears] <- 1 - sum(pr.M[t,1:(nyears-1)])
     pr.M[t+nyears-1,nyears] <- 1 - sum(pr.M[t+nyears-1,1:(nyears-1)])
+
+    pr.BOX[t,nyears] <- 1 - sum(pr.BOX[t,1:(nyears-1)]) 
   }
 
   # Compute Freeman-Tukey statistics 

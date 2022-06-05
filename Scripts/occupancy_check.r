@@ -5,8 +5,8 @@ WD <- "~/Documents/TRES_IPM"
 library(tidyverse)
 
 setwd(WD)
-raw <- read_csv("Data/nest_records.csv") %>%
-    separate("Nest Key", into=c("drop", "Nest_ID"), sep="-") %>%
+raw <- read_csv("Data/nests.csv") %>%
+    separate("Nest_Key", into=c("drop", "Nest_ID"), sep="-") %>%
     select(Nest_ID,
 	  	 Year = Year,
 	 	 Clutch_Size = "Eggs Laid")
@@ -92,22 +92,6 @@ contSummaries <- map_df(1997:2011, readContSummary) %>%
 			  mutate(Name = map_chr(Parameter, ~ parameterNames[.])) %>%
 			  filter(Rank <= 5)
 
-ggplot(contSummaries) +
-	  geom_text(aes(x=End_Year, y=Rank, label=Name)) +
-	  scale_y_reverse()
-
-getOut <- function(endYear) {
-	out <- readRDS(paste0("Output/ipm_out_endYear", endYear, ".rds")) %>%
-			mutate(End_Year = endYear) %>%
-			as_tibble()
-	return(out)
-}
-
-outs <- map_df(1997:2011, getOut)
-
-
-nos <- outs %>%
-	filter(param=="Ntot")
-
-ggplot(nos) +
-	geom_line(aes(x=year, y=mean, colour=End_Year, group=End_Year))
+# NOTE THESE ARE BROKEN -- I THINK IT'S HOW I SUBINDEX THE MARRAY, WHICH MAKES ALL
+#	OF THE NON-2011 ENDYEARS LOOKS VERY DIFFERENT THAN THE FULL ARRAY
+#	TO SUBSET YEARS, JUST PRODUCE THE MARRAY FROM RAW DATA?

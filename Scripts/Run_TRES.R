@@ -12,24 +12,12 @@
 # ------------------
 
 # Initialize packages and data
-source("Scripts/Init_TRES.R", echo=TRUE)
-
 args <- commandArgs(trailing=TRUE)
-endYear <- args[grep("--endYear", args)+1]
+if (length(args>0) && grepl("--endYear", args)) {
+  endYear <- args[grep("--endYear", args)+1]  
+}
 
-nyears <- as.numeric(endYear) - 1987
-
-numNests <- numNests[1:nyears]
-y.F <- y.F[1:nyears]
-y.M <- y.M[1:nyears]
-numEggs <- numEggs[1:nyears]
-numHatchlings <- numHatchlings[1:nyears]
-numFledglings <- numFledglings[1:nyears]
-marray.F <- marray.F[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
-marray.M <- marray.M[c(1:(nyears-1), 24:(23+nyears-1)),1:nyears]
-r.F <- rowSums(marray.F)
-r.M <- rowSums(marray.M)
-
+source("Scripts/Init_TRES.R", echo=TRUE)
 
 # Run model ---------------------------------------------------------------
 # initializing JAGS data objects and priors
@@ -40,7 +28,8 @@ jags.data <- list(nyears=nyears,
                   numHatchlings=numHatchlings, 
                   numFledglings=numFledglings,
                   marray.F=marray.F, marray.M=marray.M,
-                  r.F=r.F, r.M=r.M)
+                  r.F=r.F, r.M=r.M,
+                  marray.BOX=marray.BOX, r.BOX=r.BOX)
 
 jags.inits <- function() {
   list(m.cs=runif(1,0,10), 
@@ -57,7 +46,9 @@ jags.inits <- function() {
        m.numImms.F=runif(1,0,100), 
        m.numImms.M=runif(1,0,100),
        N.imm.F=c(NA,round(runif(nyears-1,0,100))), 
-       N.imm.M=c(NA,round(runif(nyears-1,0,100))))
+       N.imm.M=c(NA,round(runif(nyears-1,0,100))),
+       m.phi.BOX=runif(1,0,1),
+       m.recap.BOX=runif(1,0,1))
 }
 
 # output parameters
@@ -87,12 +78,13 @@ params <- c("lambda", "m.lambda",
             "fit.A.F", "fit.A.F.new", 
             "fit.A.M", "fit.A.M.new",
             "y.fit.A.F", "y.fit.A.F.new",
-            "y.fit.A.M", "y.fit.A.M.new")
+            "y.fit.A.M", "y.fit.A.M.new",
+            "phi.BOX", "recap.BOX", "m.phi.BOX", "m.recap.BOX")
 
 # call JAGS from R
 ipm <- jags(data=jags.data, inits=jags.inits, parameters.to.save=params, 
             model.file="Scripts/ipm.TRES.bug",
-            n.chains=3, n.thin=20, n.iter=300000, n.burnin=150000, 
+            n.chains=1, n.thin=20, n.iter=100000, n.burnin=20000, 
             parallel=TRUE)
 
 # summarize ipm output for analyses/visualization
@@ -103,9 +95,15 @@ colnames(out)[1] <- "param"
 out <- separate(out, param, c("param", "year"), sep="\\[|\\]", 
                 extra="drop", fill="right")
 
-colnames(out) <- c("param", "year", "mean", "sd", "low", 
-                   "twentyfive", "mid", "seventyfive", "high", 
-                   "rhat", "neff", "overlap", "f")
+if (ncol(out) == 13) {
+  colnames(out) <- c("param", "year", "mean", "sd", "low", 
+                     "twentyfive", "mid", "seventyfive", "high", 
+                     "rhat", "neff", "overlap", "f")
+} else {
+  colnames(out) <- c("param", "year", "mean", "sd", "low",
+                     "twentyfive", "mid", "seventyfive", "high",
+                     "overlap", "f")
+}
 
 out$year <- as.numeric(out$year) + 1986
 
@@ -113,9 +111,6 @@ ipm_sim <- ipm$sims.list    # the raw results at every iterations
 
 saveRDS(out, file=paste0("Output/ipm_out_endYear", endYear, ".rds"))
 saveRDS(ipm_sim, file=paste0("Output/ipm_sim_endYear", endYear, ".rds"))
-
-# library(beepr)
-# beep(3)
 
 # source("Scripts/LTRE_TRES.R", echo=TRUE)
 # source("Scripts/Vis_TRES.R", echo=TRUE)
