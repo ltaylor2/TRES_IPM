@@ -35,7 +35,7 @@ plot_occupancy <- ggplot(clean) +
      	 panel.grid = element_blank(),
      	 panel.border = element_blank())
 
-ggsave(plot_occupancy, file="Output/Nestboxes/Plot_nest_occupancy.png", 
+ggsave(plot_occupancy, file="Output/Nestboxes/Plot_2_nest_occupancy.png", 
 	   width=6, height=8) 
 
 spatial_tallies <- clean %>%
@@ -57,7 +57,7 @@ plot_spatial <- ggplot(spatial_tallies) +
 		   	    axis.ticks.y = element_blank(),
 		   	    strip.background = element_rect(colour="black", size=2, fill="white"))
 
-ggsave(plot_spatial, file="Output/Nestboxes/Plot_spatial_occupancy.png",
+ggsave(plot_spatial, file="Output/Nestboxes/Plot_1_spatial_occupancy.png",
 	  width=4, height=11)
 
 
@@ -108,7 +108,7 @@ ts.lamOut <- ggplot(lamOut) +
 plot_timeseries <- plot_grid(plotlist=list(ts.lamOut, ts.boxOut),
 		  				     nrow=2, ncol=1, align="hv")
 
-ggsave(plot_timeseries, file="Output/Nestboxes/Plot_timeseries.png",
+ggsave(plot_timeseries, file="Output/Nestboxes/Plot_3_timeseries.png",
 	   width=8, height=4)
 
 boxLamCors <- mainOut %>%
@@ -139,7 +139,7 @@ plot_boxLamCor <- ggplot(boxLamCors) +
 			   ylab("Pop. growth rate") +
 			   theme(panel.background=element_rect(fill="white", colour="black"))
 
-ggsave(plot_boxLamCor, file="Output/Nestboxes/Plot_Lambda_PhiBOX_Cor.png",
+ggsave(plot_boxLamCor, file="Output/Nestboxes/Plot_4_Lambda_PhiBOX_Cor.png",
 	   width=8, height=5)
 
 # See if summary contributions change
@@ -184,7 +184,7 @@ plot_contSummaries <- ggplot(contSummaries) +
 				   ylab("Rank overall LTRE cont.") +
     			   theme(panel.background=element_rect(fill="white", colour="black"),
     			         panel.grid=element_blank())
-ggsave(plot_contSummaries, file="Output/Nestboxes/Plot_LTRE_Contributions.png",
+ggsave(plot_contSummaries, file="Output/Nestboxes/Plot_5_LTRE_Contributions.png",
 	   width=9, height=3)
 
 
@@ -227,15 +227,23 @@ coxComparison <- lamOut %>%
 			  mutate(diffLambda = ourLambda - roughCoxLambda)
 
 insetPoints <- ggplot(coxComparison) +
-			geom_point(aes(x=ourLambda, y=roughCoxLambda)) +
 			geom_abline(aes(intercept=0, slope=1), colour="gray") +
+			geom_point(aes(x=ourLambda, y=roughCoxLambda, colour=year)) +
 			scale_x_continuous(limits=c(0.5,1.5),breaks=1) +
 			scale_y_continuous(limits=c(0.5,1.5),breaks=1) +
 			xlab(expression("Kent"~lambda)) +
 			ylab(expression("(Rough) Ontario"~lambda)) +
+			guides(colour=guide_legend(title="Year")) +
 			theme(panel.background=element_rect(fill="white",colour="black"),
 				  axis.title.x=element_text(size=6),
-				  axis.title.y=element_text(size=6))
+				  axis.title.y=element_text(size=6),
+				  legend.text=element_text(size=6),
+				  legend.title=element_text(size=6),
+				  legend.key=element_rect(fill="white", colour="white"),
+				  legend.spacing.y=unit(0, "in"),
+				  legend.key.size=unit(0, "in"),
+				  legend.margin=margin(0,0,0,0),
+				  legend.position=c(0.87, 0.2))
 
 plot_coxComparisons <- ggplot(coxComparison) +
 	                geom_hline(aes(yintercept=0), colour="gray") +
@@ -248,8 +256,8 @@ plot_coxComparisons <- ggplot(coxComparison) +
                     theme(panel.background=element_rect(fill="white", colour="black"),
 	                      panel.grid=element_blank()) +
                     annotation_custom(ggplotGrob(insetPoints),
-                    				  xmin=2002, xmax=2009,
+                    				  xmin=2003.5, xmax=2010.5,
                     				  ymin=-0.95, ymax=-0.33)
 
-ggsave(plot_coxComparisons, file="Output/Nestboxes/Plot_CoxComparisons.png",
+ggsave(plot_coxComparisons, file="Output/Nestboxes/Plot_6_CoxComparisons.png",
 	   width=8, height=4)                
